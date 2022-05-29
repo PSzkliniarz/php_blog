@@ -2,21 +2,21 @@
 
 namespace App\Test\Controller;
 
-use App\Entity\Post;
-use App\Repository\PostRepository;
+use App\Entity\Comment;
+use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class PostControllerTest extends WebTestCase
+class CommentControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private PostRepository $repository;
-    private string $path = '/post/';
+    private CommentRepository $repository;
+    private string $path = '/comment/';
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->repository = (static::getContainer()->get('doctrine'))->getRepository(Post::class);
+        $this->repository = (static::getContainer()->get('doctrine'))->getRepository(Comment::class);
 
         foreach ($this->repository->findAll() as $object) {
             $this->repository->remove($object, true);
@@ -28,7 +28,7 @@ class PostControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', $this->path);
 
         self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Post index');
+        self::assertPageTitleContains('Comment index');
 
         // Use the $crawler to perform additional assertions e.g.
         // self::assertSame('Some text on the page', $crawler->filter('.p')->first());
@@ -44,12 +44,12 @@ class PostControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(200);
 
         $this->client->submitForm('Save', [
-            'post[title]' => 'Testing',
-            'post[content]' => 'Testing',
-            'post[category]' => 'Testing',
+            'comment[comment_text]' => 'Testing',
+            'comment[autor]' => 'Testing',
+            'comment[post]' => 'Testing',
         ]);
 
-        self::assertResponseRedirects('/post/');
+        self::assertResponseRedirects('/comment/');
 
         self::assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
     }
@@ -57,17 +57,17 @@ class PostControllerTest extends WebTestCase
     public function testShow(): void
     {
         $this->markTestIncomplete();
-        $fixture = new Post();
-        $fixture->setTitle('My Title');
-        $fixture->setContent('My Title');
-        $fixture->setcategory('My Title');
+        $fixture = new Comment();
+        $fixture->setComment_text('My Title');
+        $fixture->setAutor('My Title');
+        $fixture->setPost('My Title');
 
         $this->repository->add($fixture, true);
 
         $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
 
         self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Post');
+        self::assertPageTitleContains('Comment');
 
         // Use assertions to check that the properties are properly displayed.
     }
@@ -75,28 +75,28 @@ class PostControllerTest extends WebTestCase
     public function testEdit(): void
     {
         $this->markTestIncomplete();
-        $fixture = new Post();
-        $fixture->setTitle('My Title');
-        $fixture->setContent('My Title');
-        $fixture->setcategory('My Title');
+        $fixture = new Comment();
+        $fixture->setComment_text('My Title');
+        $fixture->setAutor('My Title');
+        $fixture->setPost('My Title');
 
         $this->repository->add($fixture, true);
 
         $this->client->request('GET', sprintf('%s%s/edit', $this->path, $fixture->getId()));
 
         $this->client->submitForm('Update', [
-            'post[title]' => 'Something New',
-            'post[content]' => 'Something New',
-            'post[category]' => 'Something New',
+            'comment[comment_text]' => 'Something New',
+            'comment[autor]' => 'Something New',
+            'comment[post]' => 'Something New',
         ]);
 
-        self::assertResponseRedirects('/post/');
+        self::assertResponseRedirects('/comment/');
 
         $fixture = $this->repository->findAll();
 
-        self::assertSame('Something New', $fixture[0]->getTitle());
-        self::assertSame('Something New', $fixture[0]->getContent());
-        self::assertSame('Something New', $fixture[0]->getcategory());
+        self::assertSame('Something New', $fixture[0]->getComment_text());
+        self::assertSame('Something New', $fixture[0]->getAutor());
+        self::assertSame('Something New', $fixture[0]->getPost());
     }
 
     public function testRemove(): void
@@ -105,10 +105,10 @@ class PostControllerTest extends WebTestCase
 
         $originalNumObjectsInRepository = count($this->repository->findAll());
 
-        $fixture = new Post();
-        $fixture->setTitle('My Title');
-        $fixture->setContent('My Title');
-        $fixture->setcategory('My Title');
+        $fixture = new Comment();
+        $fixture->setComment_text('My Title');
+        $fixture->setAutor('My Title');
+        $fixture->setPost('My Title');
 
         $this->repository->add($fixture, true);
 
@@ -118,6 +118,6 @@ class PostControllerTest extends WebTestCase
         $this->client->submitForm('Delete');
 
         self::assertSame($originalNumObjectsInRepository, count($this->repository->findAll()));
-        self::assertResponseRedirects('/post/');
+        self::assertResponseRedirects('/comment/');
     }
 }
