@@ -19,8 +19,10 @@ class Post
     #[ORM\Column(type: 'text')]
     private $content;
 
-    #[ORM\OneToOne(targetEntity: Category::class, cascade: ['persist', 'remove'])]
-    private $category_id;
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'posts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $category;
+
 
     public function getId(): ?int
     {
@@ -51,14 +53,18 @@ class Post
         return $this;
     }
 
-    public function getCategoryId(): ?Category
-    {
-        return $this->category_id;
+    public function __toString() {
+        return $this->title;
     }
 
-    public function setCategoryId(?Category $category_id): self
+    public function getCategory(): ?Category
     {
-        $this->category_id = $category_id;
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
