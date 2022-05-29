@@ -1,1 +1,1 @@
-# PWMv1
+Simple Symfony blog application.
