@@ -13,11 +13,13 @@ class ProductFixtures extends Fixture
     {
         $this->faker = Factory::create();
 
-         $product = new Product();
-         $product->setName($this->faker->sentence);
-         $product->setPrice($this->faker->numberBetween(5, 100));
-         $product->setNo($this->faker->numberBetween(5, 100));
-         $manager->persist($product);
+        for ($i = 0; $i < 10; ++$i) {
+            $product = new Product();
+            $product->setName($this->faker->sentence);
+            $product->setPrice($this->faker->numberBetween(5, 100));
+            $product->setNo($this->faker->numberBetween(5, 100));
+            $manager->persist($product);
+        }
 
         $manager->flush();
     }
