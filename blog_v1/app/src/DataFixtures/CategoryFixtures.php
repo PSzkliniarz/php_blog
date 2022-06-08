@@ -1,24 +1,36 @@
 <?php
 
+/**
+ * Category fixtures.
+ */
+
 namespace App\DataFixtures;
 
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use App\Entity\Category;
-use Faker\Factory;
+use DateTimeImmutable;
 
-class CategoryFixtures extends Fixture
+/**
+ * Class CategoryFixtures.
+ *
+ * @psalm-suppress MissingConstructor
+ */
+class CategoryFixtures extends AbstractBaseFixtures
 {
-    public function load(ObjectManager $manager): void
+    /**
+     * Load data.
+     *
+     * @psalm-suppress PossiblyNullReference
+     * @psalm-suppress UnusedClosureParam
+     */
+    public function loadData(): void
     {
-        $this->faker = Factory::create();
-
-        for ($i = 0; $i < 10; ++$i) {
+        $this->createMany(20, 'categories', function (int $i) {
             $category = new Category();
-            $category->setName($this->faker->sentence);
-            $manager->persist($category);
-        }
+            $category->setName($this->faker->unique()->word);
 
-        $manager->flush();
+            return $category;
+        });
+
+        $this->manager->flush();
     }
 }
