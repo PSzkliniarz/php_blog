@@ -13,7 +13,12 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}
+    <ul>
+        <li> <a href="{{ path('app_post_index') }}">Posts</a></li>
+        <li> <a href="{{ path('app_category_index') }}">Category</a></li>
+        <li> <a href="{{ path('app_comment_index') }}">Comment</a></li>
+    </ul>
+    {% block body %}
 
 
         {% endblock %}
