@@ -38,6 +38,14 @@
         <source>title.record_view</source>
         <target>Rekord #%id%</target>
       </trans-unit>
+      <trans-unit id="action_logout">
+        <source>action_logout</source>
+        <target>Wyloguj</target>
+      </trans-unit>
+      <trans-unit id="action_login">
+        <source>action_login</source>
+        <target>Zaloguj</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
