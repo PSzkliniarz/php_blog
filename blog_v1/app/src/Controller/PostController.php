@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Form\PostType;
+use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,12 +15,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class PostController extends AbstractController
 {
     #[Route('/', name: 'app_post_index', methods: ['GET'])]
-    public function index(PostRepository $postRepository): Response
+    public function index(Request $request, PostRepository $postRepository, CategoryRepository $categoryRepository): Response
     {
+        $categoryId = $request->query->get('category');
+        $filteredPost = $postRepository->findBy(['category'=> $categoryId]);
+        if (count($filteredPost) > 0){
+            $returnValue = $filteredPost;
+        } else {
+            $returnValue = $postRepository->findAll();
+        }
         return $this->render('post/index.html.twig', [
-            'posts' => $postRepository->findAll(),
+            'posts' => $returnValue,
+            'categories' => $categoryRepository->findAll()
         ]);
     }
+
 
     #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PostRepository $postRepository): Response
