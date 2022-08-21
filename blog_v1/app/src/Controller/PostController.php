@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\CategoryRepository;
+use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,10 +52,15 @@ class PostController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
-    public function show(Post $post): Response
+    public function show(Request $request , Post $post, CommentRepository $commentRepository): Response
     {
+        $postId = $post->getId();
+//        dump($postId);die;
+//        $filteredPost = $postRepository->findBy(['category'=> $categoryId]);
+        $filteredComment = $commentRepository->findBy(['post'=> $postId]);
         return $this->render('post/show.html.twig', [
             'post' => $post,
+            'comments' => $filteredComment
         ]);
     }
 
