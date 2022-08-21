@@ -13,19 +13,32 @@
         {% endblock %}
     </head>
     <body>
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <div>{{ app.user.email }}</div>
-            <div>
-                <a href="{{ url('app_logout') }}">{{ 'action_logout'|trans }}</a>
+        <div style="width: 85%; margin:20px auto">
+            <div style="
+            padding: 5px;
+            background-color: #9ED2C6;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between">
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <div>{{ app.user.email }}</div>
+                    <div>
+                        <a href="{{ url('app_post_index') }}">Posty</a>
+                    </div>
+                    <div>
+                        <a href="{{ url('app_logout') }}">{{ 'action_logout'|trans }}</a>
+                    </div>
+                {% else %}
+                    <div>
+                        <a href="{{ url('app_login') }}">{{ 'action_login'|trans }}</a>
+                    </div>
+                {% endif %}
             </div>
-        {% else %}
-            <div>
-                <a href="{{ url('app_login') }}">{{ 'action_login'|trans }}</a>
-            </div>
-        {% endif %}
-        {% block body %}
+            {% block body %}
 
 
-        {% endblock %}
+            {% endblock %}
+        </div>
+
     </body>
 </html>

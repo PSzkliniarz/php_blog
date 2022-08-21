@@ -11,12 +11,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/post')]
 class PostController extends AbstractController
 {
     #[Route('/', name: 'app_post_index', methods: ['GET'])]
-    public function index(Request $request, PostRepository $postRepository, CategoryRepository $categoryRepository): Response
+    public function index(Request $request, PostRepository $postRepository, CategoryRepository $categoryRepository, PaginatorInterface $paginator): Response
     {
         $categoryId = $request->query->get('category');
         $filteredPost = $postRepository->findBy(['category'=> $categoryId]);
@@ -25,8 +26,15 @@ class PostController extends AbstractController
         } else {
             $returnValue = $postRepository->findAll();
         }
+
+        $pagination = $paginator->paginate(
+            $returnValue,
+            $request->query->getInt('page', 1),
+            PostRepository::PAGINATOR_ITEMS_PER_PAGE
+        );
+
         return $this->render('post/index.html.twig', [
-            'posts' => $returnValue,
+            'posts' => $pagination,
             'categories' => $categoryRepository->findAll()
         ]);
     }

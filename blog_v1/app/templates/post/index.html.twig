@@ -18,6 +18,8 @@
         </button>
     </form>
 
+    {% if posts is defined and posts.items|length %}
+
     <table class="table">
         <thead>
             <tr>
@@ -45,6 +47,16 @@
         {% endfor %}
         </tbody>
     </table>
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(posts) }}
+        </div>
+
+    {% else %}
+        <p>
+            {{ 'message.empty_list'|trans }}
+        </p>
+    {% endif %}
 
     <a href="{{ path('app_post_new') }}">Create new</a>
 {% endblock %}
