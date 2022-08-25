@@ -46,7 +46,10 @@ class PostController extends AbstractController
     #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PostRepository $postRepository): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
         $post = new Post();
+        $post->setAuthor($user);
         $post->setCreatedAt(
             DateTimeImmutable::createFromMutable(
                 new \DateTime('@'.strtotime('now'))
