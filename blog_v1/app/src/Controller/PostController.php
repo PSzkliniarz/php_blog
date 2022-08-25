@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use Monolog\DateTimeImmutable;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 #[Route('/post')]
 class PostController extends AbstractController
@@ -45,6 +47,16 @@ class PostController extends AbstractController
     public function new(Request $request, PostRepository $postRepository): Response
     {
         $post = new Post();
+        $post->setCreatedAt(
+            DateTimeImmutable::createFromMutable(
+                new \DateTime('@'.strtotime('now'))
+            )
+        );
+        $post->setUpdatedAt(
+            DateTimeImmutable::createFromMutable(
+                new \DateTime('@'.strtotime('now'))
+            )
+        );
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
@@ -77,6 +89,11 @@ class PostController extends AbstractController
     public function edit($id, Request $request, PostRepository $postRepository, EntityManagerInterface $em): Response
     {
         $post = $postRepository->findOneBy(['id'=>$id]);
+        $post->setUpdatedAt(
+            DateTimeImmutable::createFromMutable(
+                new \DateTime('@'.strtotime('now'))
+            )
+        );
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
