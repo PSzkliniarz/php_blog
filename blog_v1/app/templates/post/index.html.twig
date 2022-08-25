@@ -7,6 +7,9 @@
 
     <form action="" method="get">
         <select name="category">
+            <option selected value="all" >
+                Pokaż wszystkie
+            </option>
             {% for category in categories %}
                 <option value="{{ category.id }}">
                     {{ category.name }}

@@ -2,12 +2,18 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampableTrait;
+use Gedmo\Mapping\Annotation as Gedmo;
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Post
 {
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
