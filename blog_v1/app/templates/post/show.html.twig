@@ -33,7 +33,7 @@
         <tr>
             <th>Id</th>
             <th>Comment_text</th>
-            <th>Autor</th>
+            <th>Author</th>
             <th>actions</th>
         </tr>
         </thead>
@@ -55,5 +55,9 @@
         {% endfor %}
         </tbody>
     </table>
+    {{ form_start(form, {'action': path('app_post_show', {'id': post.id}), 'method': 'GET'}) }}
+    {{ form_widget(form) }}
+{#    <button class="btn">{{ button_label|default('Save') }}</button>#}
+    {{ form_end(form) }}
 
 {% endblock %}

@@ -29,7 +29,8 @@
                 <th>Id</th>
                 <th>Title</th>
                 <th>Content</th>
-                <th>actions</th>
+                <th>Author</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -38,9 +39,13 @@
                 <td>{{ post.id }}</td>
                 <td>{{ post.title }}</td>
                 <td>{{ post.content }}</td>
+                <td>{{ post.author.email }}</td>
                 <td>
                     <a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>
                     <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+{#                    {% if is_granted('EDIT', post) %}#}
+                        <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+{#                    {% endif %}#}
                 </td>
             </tr>
         {% else %}

@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Post;
+use App\Form\AddCommentType;
 use App\Form\PostType;
 use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;
@@ -19,6 +21,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 #[Route('/post')]
 class PostController extends AbstractController
 {
+//    #[IsGranted('EDIT', subject: 'post')]
     #[Route('/', name: 'app_post_index', methods: ['GET'])]
     public function index(Request $request, PostRepository $postRepository, CategoryRepository $categoryRepository, PaginatorInterface $paginator): Response
     {
@@ -76,15 +79,24 @@ class PostController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
-    public function show(Request $request , Post $post, CommentRepository $commentRepository): Response
+    public function show(Request $request , Post $post, CommentRepository $commentRepository, EntityManagerInterface $em): Response
     {
         $postId = $post->getId();
-//        dump($postId);die;
-//        $filteredPost = $postRepository->findBy(['category'=> $categoryId]);
+        $comment = new Comment();
+        $form = $this->createForm(AddCommentType::class, $comment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()){
+            $comment->setPost($post);
+            $em->persist($comment);
+            $em->flush();
+            $redirectUrl = $this->generateUrl('app_post_show', ['id'=>$postId]);
+            return $this->redirect($redirectUrl);
+        }
         $filteredComment = $commentRepository->findBy(['post'=> $postId]);
         return $this->render('post/show.html.twig', [
             'post' => $post,
-            'comments' => $filteredComment
+            'comments' => $filteredComment,
+            'form' => $form->createView()
         ]);
     }
 
