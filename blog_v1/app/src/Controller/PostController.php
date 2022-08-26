@@ -2,29 +2,67 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Post;
+use App\Form\AddCommentType;
 use App\Form\PostType;
+use App\Repository\CategoryRepository;
+use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
+use Monolog\DateTimeImmutable;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 #[Route('/post')]
 class PostController extends AbstractController
 {
+//    #[IsGranted('EDIT', subject: 'post')]
     #[Route('/', name: 'app_post_index', methods: ['GET'])]
-    public function index(PostRepository $postRepository): Response
+    public function index(Request $request, PostRepository $postRepository, CategoryRepository $categoryRepository, PaginatorInterface $paginator): Response
     {
+        $categoryId = $request->query->get('category');
+        $filteredPost = $postRepository->findBy(['category'=> $categoryId]);
+        if (count($filteredPost) > 0){
+            $returnValue = $filteredPost;
+        } else {
+            $returnValue = $postRepository->findAll();
+        }
+
+        $pagination = $paginator->paginate(
+            $returnValue,
+            $request->query->getInt('page', 1),
+            PostRepository::PAGINATOR_ITEMS_PER_PAGE
+        );
+
         return $this->render('post/index.html.twig', [
-            'posts' => $postRepository->findAll(),
+            'posts' => $pagination,
+            'categories' => $categoryRepository->findAll()
         ]);
     }
+
 
     #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PostRepository $postRepository): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
         $post = new Post();
+        $post->setAuthor($user);
+        $post->setCreatedAt(
+            DateTimeImmutable::createFromMutable(
+                new \DateTime('@'.strtotime('now'))
+            )
+        );
+        $post->setUpdatedAt(
+            DateTimeImmutable::createFromMutable(
+                new \DateTime('@'.strtotime('now'))
+            )
+        );
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
@@ -41,21 +79,43 @@ class PostController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
-    public function show(Post $post): Response
+    public function show(Request $request , Post $post, CommentRepository $commentRepository, EntityManagerInterface $em): Response
     {
+        $postId = $post->getId();
+        $comment = new Comment();
+        $form = $this->createForm(AddCommentType::class, $comment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()){
+            $comment->setPost($post);
+            $em->persist($comment);
+            $em->flush();
+            $redirectUrl = $this->generateUrl('app_post_show', ['id'=>$postId]);
+            return $this->redirect($redirectUrl);
+        }
+        $filteredComment = $commentRepository->findBy(['post'=> $postId]);
         return $this->render('post/show.html.twig', [
             'post' => $post,
+            'comments' => $filteredComment,
+            'form' => $form->createView()
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Post $post, PostRepository $postRepository): Response
+    public function edit($id, Request $request, PostRepository $postRepository, EntityManagerInterface $em): Response
     {
+        $post = $postRepository->findOneBy(['id'=>$id]);
+        $post->setUpdatedAt(
+            DateTimeImmutable::createFromMutable(
+                new \DateTime('@'.strtotime('now'))
+            )
+        );
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $postRepository->add($post, true);
+//            $postRepository->add($post, true);
+            $em->persist($post);
+            $em->flush();
 
             return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
         }

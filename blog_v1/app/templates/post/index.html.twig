@@ -5,13 +5,32 @@
 {% block body %}
     <h1>Post index</h1>
 
+    <form action="" method="get">
+        <select name="category">
+            <option selected value="all" >
+                Pokaż wszystkie
+            </option>
+            {% for category in categories %}
+                <option value="{{ category.id }}">
+                    {{ category.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">
+            Wybierz kategorie
+        </button>
+    </form>
+
+    {% if posts is defined and posts.items|length %}
+
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Title</th>
                 <th>Content</th>
-                <th>actions</th>
+                <th>Author</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -20,9 +39,13 @@
                 <td>{{ post.id }}</td>
                 <td>{{ post.title }}</td>
                 <td>{{ post.content }}</td>
+                <td>{{ post.author.email }}</td>
                 <td>
                     <a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>
                     <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+{#                    {% if is_granted('EDIT', post) %}#}
+                        <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+{#                    {% endif %}#}
                 </td>
             </tr>
         {% else %}
@@ -32,6 +55,16 @@
         {% endfor %}
         </tbody>
     </table>
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(posts) }}
+        </div>
+
+    {% else %}
+        <p>
+            {{ 'message.empty_list'|trans }}
+        </p>
+    {% endif %}
 
     <a href="{{ path('app_post_new') }}">Create new</a>
 {% endblock %}
