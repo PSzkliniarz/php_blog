@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Post;
+use App\Form\AddCommentType;
 use App\Form\PostType;
 use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;
@@ -13,10 +15,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use Monolog\DateTimeImmutable;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 #[Route('/post')]
 class PostController extends AbstractController
 {
+//    #[IsGranted('EDIT', subject: 'post')]
     #[Route('/', name: 'app_post_index', methods: ['GET'])]
     public function index(Request $request, PostRepository $postRepository, CategoryRepository $categoryRepository, PaginatorInterface $paginator): Response
     {
@@ -44,7 +49,20 @@ class PostController extends AbstractController
     #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PostRepository $postRepository): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
         $post = new Post();
+        $post->setAuthor($user);
+        $post->setCreatedAt(
+            DateTimeImmutable::createFromMutable(
+                new \DateTime('@'.strtotime('now'))
+            )
+        );
+        $post->setUpdatedAt(
+            DateTimeImmutable::createFromMutable(
+                new \DateTime('@'.strtotime('now'))
+            )
+        );
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
@@ -61,15 +79,24 @@ class PostController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
-    public function show(Request $request , Post $post, CommentRepository $commentRepository): Response
+    public function show(Request $request , Post $post, CommentRepository $commentRepository, EntityManagerInterface $em): Response
     {
         $postId = $post->getId();
-//        dump($postId);die;
-//        $filteredPost = $postRepository->findBy(['category'=> $categoryId]);
+        $comment = new Comment();
+        $form = $this->createForm(AddCommentType::class, $comment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()){
+            $comment->setPost($post);
+            $em->persist($comment);
+            $em->flush();
+            $redirectUrl = $this->generateUrl('app_post_show', ['id'=>$postId]);
+            return $this->redirect($redirectUrl);
+        }
         $filteredComment = $commentRepository->findBy(['post'=> $postId]);
         return $this->render('post/show.html.twig', [
             'post' => $post,
-            'comments' => $filteredComment
+            'comments' => $filteredComment,
+            'form' => $form->createView()
         ]);
     }
 
@@ -77,6 +104,11 @@ class PostController extends AbstractController
     public function edit($id, Request $request, PostRepository $postRepository, EntityManagerInterface $em): Response
     {
         $post = $postRepository->findOneBy(['id'=>$id]);
+        $post->setUpdatedAt(
+            DateTimeImmutable::createFromMutable(
+                new \DateTime('@'.strtotime('now'))
+            )
+        );
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 

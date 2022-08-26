@@ -16,6 +16,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CategoryRepository extends ServiceEntityRepository
 {
+    /**
+     * @param ManagerRegistry $registry Constuructor
+     */
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Category::class);
