@@ -2,14 +2,15 @@
 
 namespace App\Test\Controller;
 
+use App\Entity\Enum\UserRole;
 use App\Entity\Post;
 use App\Repository\PostRepository;
+use App\Tests\BaseTest;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class PostControllerTest extends WebTestCase
+class PostControllerTest extends BaseTest
 {
-    private KernelBrowser $client;
     private PostRepository $repository;
     private string $path = '/post/';
 
@@ -18,20 +19,25 @@ class PostControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->repository = (static::getContainer()->get('doctrine'))->getRepository(Post::class);
 
-        foreach ($this->repository->findAll() as $object) {
-            $this->repository->remove($object, true);
-        }
+//        foreach ($this->repository->findAll() as $object) {
+//            $this->repository->remove($object, true);
+//        }
     }
 
     public function testIndex(): void
     {
+        $expectedStatusCode = 200;
+        $adminUser = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'post_index_admin@example.com');
+        $this->client->loginUser($adminUser);
         $crawler = $this->client->request('GET', $this->path);
+        $result = $this->client->getResponse();
 
         self::assertResponseStatusCodeSame(200);
         self::assertPageTitleContains('Post index');
 
         // Use the $crawler to perform additional assertions e.g.
         // self::assertSame('Some text on the page', $crawler->filter('.p')->first());
+        $this->assertEquals($expectedStatusCode, $result->getStatusCode());
     }
 
     public function testNew(): void
