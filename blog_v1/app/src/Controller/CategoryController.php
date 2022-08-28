@@ -5,11 +5,16 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+/**
+ * Class CategoryController
+ */
 #[Route('/category')]
 class CategoryController extends AbstractController
 {
@@ -49,6 +54,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    #[IsGranted('EDIT', subject: 'category')]
     #[Route('/{id}/edit', name: 'app_category_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Category $category, CategoryRepository $categoryRepository): Response
     {
@@ -67,6 +73,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    #[IsGranted('DELETE', subject: 'category')]
     #[Route('/{id}', name: 'app_category_delete', methods: ['POST'])]
     public function delete(Request $request, Category $category, CategoryRepository $categoryRepository): Response
     {

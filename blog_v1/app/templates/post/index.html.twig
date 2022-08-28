@@ -42,10 +42,9 @@
                 <td>{{ post.author.email }}</td>
                 <td>
                     <a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>
-                    <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
-{#                    {% if is_granted('EDIT', post) %}#}
+                    {% if is_granted('EDIT', post) %}
                         <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
-{#                    {% endif %}#}
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -66,5 +65,4 @@
         </p>
     {% endif %}
 
-    <a href="{{ path('app_post_new') }}">Create new</a>
 {% endblock %}

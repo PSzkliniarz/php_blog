@@ -5,14 +5,23 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+/**
+ * Class CommentController
+ */
 #[Route('/comment')]
 class CommentController extends AbstractController
 {
+    /**
+     * @param CommentRepository $commentRepository Show comments
+     * @return Response
+     */
     #[Route('/', name: 'app_comment_index', methods: ['GET'])]
     public function index(CommentRepository $commentRepository): Response
     {
@@ -21,6 +30,11 @@ class CommentController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param CommentRepository $commentRepository New Comment
+     * @return Response
+     */
     #[Route('/new', name: 'app_comment_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CommentRepository $commentRepository): Response
     {
@@ -40,6 +54,10 @@ class CommentController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Comment $comment Show comment
+     * @return Response
+     */
     #[Route('/{id}', name: 'app_comment_show', methods: ['GET'])]
     public function show(Comment $comment): Response
     {
@@ -48,6 +66,12 @@ class CommentController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param Comment $comment
+     * @param CommentRepository $commentRepository Edit comment
+     * @return Response
+     */
     #[Route('/{id}/edit', name: 'app_comment_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Comment $comment, CommentRepository $commentRepository): Response
     {
@@ -66,6 +90,14 @@ class CommentController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param Comment $comment
+     * @param CommentRepository $commentRepository
+     * @return Response
+     * Delete Comment
+     */
+    #[IsGranted('DELETE', subject: 'comment')]
     #[Route('/{id}', name: 'app_comment_delete', methods: ['POST'])]
     public function delete(Request $request, Comment $comment, CommentRepository $commentRepository): Response
     {
