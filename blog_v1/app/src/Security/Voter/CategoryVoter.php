@@ -1,12 +1,12 @@
 <?php
 /**
- * Post voter.
+ * Category voter.
  */
 
 namespace App\Security\Voter;
 
 use App\Entity\Enum\UserRole;
-use App\Entity\Post;
+use App\Entity\Category;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -14,9 +14,9 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class PostVoter.
+ * Class CategoryVoter.
  */
-class PostVoter extends Voter
+class CategoryVoter extends Voter
 {
     /**
      * Edit permission.
@@ -67,7 +67,7 @@ class PostVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE])
-            && $subject instanceof Post;
+            && $subject instanceof Category;
     }
 
     /**
@@ -100,44 +100,42 @@ class PostVoter extends Voter
     }
 
     /**
-     * Checks if user can edit post.
+     * Checks if user can edit category.
      *
-     * @param Post $post Post entity
+     * @param Category $category Category entity
      * @param User $user User
      *
      * @return bool Result
      */
-    private function canEdit(Post $post, User $user): bool
+    private function canEdit(Category $category, User $user): bool
     {
-        return $post->getAuthor() === $user or
+        return (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
+    }
+
+    /**
+     * Checks if user can view category.
+     *
+     * @param Category $category Category entity
+     * @param User $user User
+     *
+     * @return bool Result
+     */
+    private function canView(Category $category, User $user): bool
+    {
+        return $category->getAuthor() === $user or
             (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
     }
 
     /**
-     * Checks if user can view post.
+     * Checks if user can delete category.
      *
-     * @param Post $post Post entity
+     * @param Category $category Category entity
      * @param User $user User
      *
      * @return bool Result
      */
-    private function canView(Post $post, User $user): bool
+    private function canDelete(Category $category, User $user): bool
     {
-        return $post->getAuthor() === $user or
-            (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
-    }
-
-    /**
-     * Checks if user can delete post.
-     *
-     * @param Post $post Post entity
-     * @param User $user User
-     *
-     * @return bool Result
-     */
-    private function canDelete(Post $post, User $user): bool
-    {
-        return $post->getAuthor() === $user or
-            (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
+        return (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
     }
 }

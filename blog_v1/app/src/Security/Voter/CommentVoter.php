@@ -1,12 +1,12 @@
 <?php
 /**
- * Post voter.
+ * Comment voter.
  */
 
 namespace App\Security\Voter;
 
 use App\Entity\Enum\UserRole;
-use App\Entity\Post;
+use App\Entity\Comment;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -14,9 +14,9 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class PostVoter.
+ * Class CommentVoter.
  */
-class PostVoter extends Voter
+class CommentVoter extends Voter
 {
     /**
      * Edit permission.
@@ -67,7 +67,7 @@ class PostVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE])
-            && $subject instanceof Post;
+            && $subject instanceof Comment;
     }
 
     /**
@@ -100,44 +100,42 @@ class PostVoter extends Voter
     }
 
     /**
-     * Checks if user can edit post.
+     * Checks if user can edit comment.
      *
-     * @param Post $post Post entity
+     * @param Comment $comment Comment entity
      * @param User $user User
      *
      * @return bool Result
      */
-    private function canEdit(Post $post, User $user): bool
+    private function canEdit(Comment $comment, User $user): bool
     {
-        return $post->getAuthor() === $user or
+        return $comment->getAuthor() === $user or
             (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
     }
 
     /**
-     * Checks if user can view post.
+     * Checks if user can view comment.
      *
-     * @param Post $post Post entity
+     * @param Comment $comment Comment entity
      * @param User $user User
      *
      * @return bool Result
      */
-    private function canView(Post $post, User $user): bool
+    private function canView(Comment $comment, User $user): bool
     {
-        return $post->getAuthor() === $user or
-            (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
+        return (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
     }
 
     /**
-     * Checks if user can delete post.
+     * Checks if user can delete comment.
      *
-     * @param Post $post Post entity
+     * @param Comment $comment Comment entity
      * @param User $user User
      *
      * @return bool Result
      */
-    private function canDelete(Post $post, User $user): bool
+    private function canDelete(Comment $comment, User $user): bool
     {
-        return $post->getAuthor() === $user or
-            (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
+        return (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
     }
 }
