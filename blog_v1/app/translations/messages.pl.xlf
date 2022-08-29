@@ -16,7 +16,11 @@
       </trans-unit>
       <trans-unit id="label.content">
         <source>label.content</source>
-        <target>Zawartośćaaaa</target>
+        <target>Zawartość</target>
+      </trans-unit>
+      <trans-unit id="label.category">
+        <source>label.category</source>
+        <target>Kategoria</target>
       </trans-unit>
       <trans-unit id="label.tags">
         <source>label.tags</source>
@@ -45,6 +49,42 @@
       <trans-unit id="action_login">
         <source>action_login</source>
         <target>Zaloguj</target>
+      </trans-unit>
+      <trans-unit id="action.view">
+        <source>action.view</source>
+        <target>Zobacz</target>
+      </trans-unit>
+      <trans-unit id="action.edit">
+        <source>action.edit</source>
+        <target>Edytuj</target>
+      </trans-unit>
+      <trans-unit id="action.delete">
+        <source>action.delete</source>
+        <target>Usuń</target>
+      </trans-unit>
+      <trans-unit id="action.save">
+        <source>action.save</source>
+        <target>Zapisz</target>
+      </trans-unit>
+      <trans-unit id="action.create">
+        <source>action.create</source>
+        <target>Nowy post</target>
+      </trans-unit>
+      <trans-unit id="title.post_list">
+        <source>title.post_list</source>
+        <target>Posty</target>
+      </trans-unit>
+      <trans-unit id="title.post_edit">
+        <source>title.post_edit</source>
+        <target>Edytuj post</target>
+      </trans-unit>
+      <trans-unit id="title.post_create">
+        <source>title.post_create</source>
+        <target>Stwórz post</target>
+      </trans-unit>
+      <trans-unit id="title.post_delete">
+        <source>title.post_delete</source>
+        <target>Usuń post</target>
       </trans-unit>
     </body>
   </file>

@@ -27,4 +27,13 @@
     {% if is_granted('DELETE', category) %}
         {{ include('category/_delete_form.html.twig') }}
     {% endif %}
+
+    <br>
+    <br>
+    {% for post in category.posts %}
+        <a href="{{ url('app_post_show', {id: post.id}) }}" title="{{ 'post_show'|trans }}">
+            {{ post.title }}
+        </a><br>
+    {%  endfor %}
+
 {% endblock %}

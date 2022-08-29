@@ -9,6 +9,8 @@ use App\Form\PostType;
 use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
+use App\Service\PostService;
+use App\Service\PostServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use Monolog\DateTimeImmutable;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 /**
@@ -27,35 +30,40 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class PostController extends AbstractController
 {
     /**
-     * @param Request $request
-     * @param PostRepository $postRepository
-     * @param CategoryRepository $categoryRepository
-     * @param PaginatorInterface $paginator
-     * @return Response
-     * Show post list
+     * Post service.
      */
-    #[Route('/', name: 'app_post_index', methods: ['GET'])]
-    public function index(Request $request, PostRepository $postRepository, CategoryRepository $categoryRepository,
-                          PaginatorInterface $paginator): Response
-    {
-        $categoryId = $request->query->get('category');
-        $filteredPost = $postRepository->findBy(['category'=> $categoryId]);
-        if (count($filteredPost) > 0){
-            $returnValue = $filteredPost;
-        } else {
-            $returnValue = $postRepository->findAll();
-        }
+    private PostService $postService;
 
-        $pagination = $paginator->paginate(
-            $returnValue,
-            $request->query->getInt('page', 1),
-            PostRepository::PAGINATOR_ITEMS_PER_PAGE
+    /**
+     * Constructor.
+     */
+    public function __construct(PostServiceInterface $postService, TranslatorInterface $translator)
+    {
+        $this->postService = $postService;
+        $this->translator = $translator;
+    }
+
+    /**
+     * Index action.
+     *
+     * @param Request $request HTTP Request
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        name: 'app_post_index',
+        methods: 'GET'
+    )]
+    public function index(Request $request): Response
+    {
+        $pagination = $this->postService->getPaginatedList(
+            $request->query->getInt('page', 1)
         );
 
-        return $this->render('post/index.html.twig', [
-            'posts' => $pagination,
-            'categories' => $categoryRepository->findAll()
-        ]);
+        return $this->render(
+            'post/index.html.twig',
+            ['pagination' => $pagination]
+        );
     }
 
     /**
