@@ -22,14 +22,14 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_post_index') }}">back to list</a>
+    <a href="{{ path('post_index') }}">back to list</a>
 
     {% if is_granted('EDIT', post) %}
-        <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+        <a href="{{ path('post_edit', {'id': post.id}) }}">edit</a>
     {% endif %}
 
     {% if is_granted('DELETE', post) %}
-        {{ include('post/_delete_form.html.twig') }}
+        <a href="{{ path('post_delete', {'id': post.id}) }}">DELETE</a>
     {% endif %}
     <table class="table">
         <thead>
@@ -55,7 +55,7 @@
         {% endfor %}
         </tbody>
     </table>
-    {{ form_start(form, {'action': path('app_post_show', {'id': post.id}), 'method': 'GET'}) }}
+    {{ form_start(form, {'action': path('post_show', {'id': post.id}), 'method': 'GET'}) }}
     {{ form_widget(form) }}
 {#    <button class="btn">{{ button_label|default('Save') }}</button>#}
     {{ form_end(form) }}

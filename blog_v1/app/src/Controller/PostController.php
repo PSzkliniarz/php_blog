@@ -35,6 +35,11 @@ class PostController extends AbstractController
     private PostService $postService;
 
     /**
+     * Translator.
+     */
+    private TranslatorInterface $translator;
+
+    /**
      * Constructor.
      */
     public function __construct(PostServiceInterface $postService, TranslatorInterface $translator)
@@ -51,7 +56,7 @@ class PostController extends AbstractController
      * @return Response HTTP response
      */
     #[Route(
-        name: 'app_post_index',
+        name: 'post_index',
         methods: 'GET'
     )]
     public function index(Request $request): Response
@@ -73,37 +78,33 @@ class PostController extends AbstractController
      * @return Response
      * @throws \Exception
      */
-    #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PostRepository $postRepository): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         $post = new Post();
         $post->setAuthor($user);
-        $post->setCreatedAt(
-            DateTimeImmutable::createFromMutable(
-                new \DateTime('@'.strtotime('now'))
-            )
-        );
-        $post->setUpdatedAt(
-            DateTimeImmutable::createFromMutable(
-                new \DateTime('@'.strtotime('now'))
-            )
-        );
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $postRepository->add($post, true);
+            $this->postService->save($post);
 
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.created_successfully')
+            );
+
+            return $this->redirectToRoute('post_index');
         }
 
         return $this->renderForm('post/new.html.twig', [
-            'post' => $post,
             'form' => $form,
         ]);
     }
+
+
 
     /**
      * @param Request $request
@@ -113,7 +114,7 @@ class PostController extends AbstractController
      * @return Response
      * Show post
      */
-    #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'post_show', methods: ['GET'])]
     public function show(Request $request , Post $post, CommentRepository $commentRepository, EntityManagerInterface $em): Response
     {
         $postId = $post->getId();
@@ -144,25 +145,24 @@ class PostController extends AbstractController
      * @return Response HTTP response
      * Edit post
      */
-    #[Route('/{id}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'post_edit', methods: ['GET', 'POST'])]
     #[IsGranted('EDIT', subject: 'post')]
     public function edit($id, Request $request, PostRepository $postRepository, EntityManagerInterface $em, Post $post): Response
     {
         $post = $postRepository->findOneBy(['id'=>$id]);
-        $post->setUpdatedAt(
-            DateTimeImmutable::createFromMutable(
-                new \DateTime('@'.strtotime('now'))
-            )
-        );
+
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            $postRepository->add($post, true);
-            $em->persist($post);
-            $em->flush();
+            $this->postService->save($post);
 
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.created_successfully')
+            );
+
+            return $this->redirectToRoute('post_index');
         }
 
         return $this->renderForm('post/edit.html.twig', [
@@ -172,19 +172,43 @@ class PostController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param Post $post
-     * @param PostRepository $postRepository Delete post
-     * @return Response
+     * Delete action.
+     *
+     * @param Request $request HTTP request
+     * @param Post    $post    Post entity
+     *
+     * @return Response HTTP response
      */
+    #[Route('/{id}/delete',
+        name: 'post_delete',
+        requirements: ['id' => '[1-9]\d*'],
+        methods: 'GET|DELETE')]
     #[IsGranted('DELETE', subject: 'post')]
-    #[Route('/{id}', name: 'app_post_delete', methods: ['POST'])]
-    public function delete(Request $request, Post $post, PostRepository $postRepository): Response
+    public function delete(Request $request, Post $post): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
-            $postRepository->remove($post, true);
+        $form = $this->createForm(PostType::class, $post, [
+            'method' => 'DELETE',
+            'action' => $this->generateUrl('post_delete', ['id' => $post->getId()]),
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->postService->delete($post);
+
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.deleted_successfully')
+            );
+
+            return $this->redirectToRoute('post_index');
         }
 
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->render(
+            'post/delete.html.twig',
+            [
+                'form' => $form->createView(),
+                'post' => $post,
+            ]
+        );
     }
 }
