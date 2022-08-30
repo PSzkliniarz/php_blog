@@ -20,9 +20,9 @@
                     <div>{{ app.user.email }}</div>
                     <div>
                         <a style="margin:15px" href="{{ url('post_index') }}">Posty</a>
-                        <a style="margin:15px" href="{{ url('app_category_index') }}">Kategorie</a>
+                        <a style="margin:15px" href="{{ url('category_index') }}">Kategorie</a>
                         <a style="margin:15px" href="{{ path('post_new') }}">Nowy Post</a>
-                        <a style="margin:15px" href="{{ path('app_category_new') }}">Nowa kategoria</a>
+                        <a style="margin:15px" href="{{ path('category_new') }}">Nowa kategoria</a>
                     </div>
                     <div>
                         <a href="{{ url('app_logout') }}">{{ 'action_logout'|trans }}</a>

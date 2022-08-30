@@ -18,10 +18,10 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_category_index') }}">back to list</a>
+    <a href="{{ path('category_index') }}">back to list</a>
 
     {% if is_granted('EDIT', category) %}
-        <a href="{{ path('app_category_edit', {'id': category.id}) }}">edit</a>
+        <a href="{{ path('category_edit', {'id': category.id}) }}">edit</a>
     {% endif %}
 
     {% if is_granted('DELETE', category) %}
@@ -31,7 +31,7 @@
     <br>
     <br>
     {% for post in category.posts %}
-        <a href="{{ url('app_post_show', {id: post.id}) }}" title="{{ 'post_show'|trans }}">
+        <a href="{{ url('post_show', {id: post.id}) }}" title="{{ 'post_show'|trans }}">
             {{ post.title }}
         </a><br>
     {%  endfor %}
