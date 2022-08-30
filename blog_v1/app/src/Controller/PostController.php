@@ -105,7 +105,6 @@ class PostController extends AbstractController
     }
 
 
-
     /**
      * @param Request $request
      * @param Post $post
@@ -125,7 +124,7 @@ class PostController extends AbstractController
             $comment->setPost($post);
             $em->persist($comment);
             $em->flush();
-            $redirectUrl = $this->generateUrl('app_post_show', ['id'=>$postId]);
+            $redirectUrl = $this->generateUrl('post_show', ['id'=>$postId]);
             return $this->redirect($redirectUrl);
         }
         $filteredComment = $commentRepository->findBy(['post'=> $postId]);

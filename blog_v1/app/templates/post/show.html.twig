@@ -45,7 +45,7 @@
                 <td>{{ comment.commentText }}</td>
                 <td>{{ comment.autor }}</td>
                 <td>
-                    <a href="{{ path('app_comment_show', {'id': comment.id}) }}">show</a>
+                    <a href="{{ path('comment_show', {'id': comment.id}) }}">show</a>
                 </td>
             </tr>
         {% else %}

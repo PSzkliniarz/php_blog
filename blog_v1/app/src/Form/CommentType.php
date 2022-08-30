@@ -12,7 +12,14 @@ class CommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('comment_text')
+            ->add(
+                'content',
+                TextType::class,
+                [
+                    'label' => 'labe.comment_text',
+                    'required' => true,
+                    'attr' => ['max_length' => 255],
+                ])
             ->add('autor')
             ->add('post')
         ;
