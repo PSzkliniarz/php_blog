@@ -7,123 +7,121 @@ use App\Entity\Post;
 use App\Repository\PostRepository;
 use App\Tests\BaseTest;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PostControllerTest extends BaseTest
 {
+    /**
+     * Test route.
+     *
+     * @const string
+     */
+    public const TEST_ROUTE = '/post';
+
     private PostRepository $repository;
-    private string $path = '/post/';
 
-    protected function setUp(): void
+    /**
+     * Set up tests.
+     */
+    public function setUp(): void
     {
-        $this->client = static::createClient();
+        $this->httpClient = static::createClient();
         $this->repository = (static::getContainer()->get('doctrine'))->getRepository(Post::class);
-
-//        foreach ($this->repository->findAll() as $object) {
-//            $this->repository->remove($object, true);
-//        }
     }
 
+    /**
+     * Test index route
+     *
+     * @return void
+     */
     public function testIndex(): void
     {
         $expectedStatusCode = 200;
         $adminUser = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'post_index_admin@example.com');
-        $this->client->loginUser($adminUser);
-        $crawler = $this->client->request('GET', $this->path);
-        $result = $this->client->getResponse();
+        $this->httpClient->loginUser($adminUser);
+        $this->httpClient->request('GET', self::TEST_ROUTE);
+        $result = $this->httpClient->getResponse();
 
-        self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Post index');
-
-        // Use the $crawler to perform additional assertions e.g.
-        // self::assertSame('Some text on the page', $crawler->filter('.p')->first());
         $this->assertEquals($expectedStatusCode, $result->getStatusCode());
     }
 
     public function testNew(): void
     {
-        $originalNumObjectsInRepository = count($this->repository->findAll());
+//        $originalNumObjectsInRepository = count($this->repository->findAll());
+//
+//        $this->markTestIncomplete();
 
-        $this->markTestIncomplete();
-        $this->client->request('GET', sprintf('%snew', $this->path));
+        $user= $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'post_new_admin@example.com');
+        $this->httpClient->loginUser($user);
 
-        self::assertResponseStatusCodeSame(200);
+        $category = $this->createCategory('Category_One');
 
-        $this->client->submitForm('Save', [
+        $this->httpClient->request('GET', self::TEST_ROUTE . '/new');;
+
+        $this->httpClient->submitForm('Save', [
             'post[title]' => 'Testing',
             'post[content]' => 'Testing',
-            'post[category]' => 'Testing',
+            'post[category]' => $category->getId(),
         ]);
+        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
 
-        self::assertResponseRedirects('/post/');
-
-        self::assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
+        $this->assertEquals(302, $resultStatusCode);
     }
 
     public function testShow(): void
     {
-        $this->markTestIncomplete();
-        $fixture = new Post();
-        $fixture->setTitle('My Title');
-        $fixture->setContent('My Title');
-        $fixture->setcategory('My Title');
+        $user= $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'post_admin@example.com');
+        $category = $this->createCategory();
+        $fixture = $this->createPost($user, $category);
 
-        $this->repository->add($fixture, true);
+        $this->httpClient->request('GET', self::TEST_ROUTE . '/' . $fixture->getId());
 
-        $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
+        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
 
-        self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Post');
-
-        // Use assertions to check that the properties are properly displayed.
+        $this->assertEquals(200, $resultStatusCode);
+        $this->assertEquals('post_admin@example.com', $fixture->getAuthor()->getEmail());
     }
 
     public function testEdit(): void
     {
-        $this->markTestIncomplete();
-        $fixture = new Post();
-        $fixture->setTitle('My Title');
-        $fixture->setContent('My Title');
-        $fixture->setcategory('My Title');
+        $postRepository =
+            static::getContainer()->get(PostRepository::class);
 
-        $this->repository->add($fixture, true);
+        $user= $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'post_admin@example.com');
+        $category = $this->createCategory();
+        $fixture = $this->createPost($user, $category);
 
-        $this->client->request('GET', sprintf('%s%s/edit', $this->path, $fixture->getId()));
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'. $fixture->getId().'/edit');;
 
-        $this->client->submitForm('Update', [
-            'post[title]' => 'Something New',
-            'post[content]' => 'Something New',
-            'post[category]' => 'Something New',
+        $newTitle = 'New Title';
+        $newContent = 'New Content';
+        $this->httpClient->submitForm('Update', [
+            'post[title]' => $newTitle,
+            'post[content]' => $newContent,
         ]);
-
-        self::assertResponseRedirects('/post/');
-
-        $fixture = $this->repository->findAll();
-
-        self::assertSame('Something New', $fixture[0]->getTitle());
-        self::assertSame('Something New', $fixture[0]->getContent());
-        self::assertSame('Something New', $fixture[0]->getcategory());
+//        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
+//
+//        $this->assertEquals(200, $resultStatusCode);
+        $savedQuestion = $postRepository->findOneById($fixture->getId());
+        $this->assertEquals(
+            $newTitle,
+            $savedQuestion->getTitle()
+        );
     }
 
     public function testRemove(): void
     {
-        $this->markTestIncomplete();
 
         $originalNumObjectsInRepository = count($this->repository->findAll());
 
-        $fixture = new Post();
-        $fixture->setTitle('My Title');
-        $fixture->setContent('My Title');
-        $fixture->setcategory('My Title');
+        $user= $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'post_admin@example.com');
+        $category = $this->createCategory();
+        $fixture = $this->createPost($user, $category);
 
-        $this->repository->add($fixture, true);
+//        self::assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
 
-        self::assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'. $fixture->getId().'/delete');;
+        $this->httpClient->submitForm('Delete');
 
-        $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
-        $this->client->submitForm('Delete');
-
-        self::assertSame($originalNumObjectsInRepository, count($this->repository->findAll()));
-        self::assertResponseRedirects('/post/');
+        $this->assertEquals(200, 2);
     }
 }

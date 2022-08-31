@@ -3,21 +3,13 @@
 namespace App\Tests;
 
 use App\Entity\Category;
-//use App\Entity\Operation;
-//use App\Entity\Payment;
-//use App\Entity\Tag;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\User;
-//use App\Entity\Wallet;
 use App\Repository\CategoryRepository;
-//use App\Repository\OperationRepository;
-//use App\Repository\PaymentRepository;
-//use App\Repository\TagRepository;
 use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
-//use App\Repository\WalletRepository;
 use DateTime;
 use Monolog\DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;

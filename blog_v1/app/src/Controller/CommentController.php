@@ -113,7 +113,7 @@ class CommentController extends AbstractController
      * @param CommentRepository $commentRepository Edit comment
      * @return Response
      */
-    #[Route('/{id}/edit', name: 'app_comment_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'comment_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Comment $comment, CommentRepository $commentRepository): Response
     {
         $form = $this->createForm(CommentType::class, $comment);
