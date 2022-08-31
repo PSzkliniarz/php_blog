@@ -48,6 +48,8 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     /**
      * Constructor.
+     *
+     * @param UrlGeneratorInterface $urlGenerator urlGenerator
      */
     public function __construct(UrlGeneratorInterface $urlGenerator)
     {
@@ -109,6 +111,19 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         return new RedirectResponse($this->urlGenerator->generate(self::DEFAULT_ROUTE));
     }
+
+
+    /**
+     * @param Request $request request to login app
+     *
+     * @return bool return tru if we pass
+     */
+    public function supports(Request $request): bool
+    {
+        return self::LOGIN_ROUTE === $request->attributes->get('_route')
+            && $request->isMethod('POST');
+    }
+
 
     /**
      * Get login URL.
