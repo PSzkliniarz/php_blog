@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.comment_delete'|trans({'%id%': comment.id|default('')}) }}
+{% endblock %}
+
+{% block body %}
+<div>
+    <a id="back" href="{{ url('post_show', {id:comment.post.id}) }}" class="btn btn-outline-secondary">
+        {{ 'action.back_to_list'|trans }}
+    </a>
+</div>
+<h1>{{ 'title.comment_delete'|trans({'%id%': comment.id|default('')}) }}</h1>
+<div id="form1">
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <h3>{{ 'confirm'|trans }}</h3>
+    <div id="save">
+        <input type="submit" value="{{ 'action.delete'|trans }}" class="btn btn-outline-danger" />
+    </div>
+</div>
+
+    {{ form_end(form) }}
+{% endblock %}

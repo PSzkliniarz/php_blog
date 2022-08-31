@@ -8,6 +8,7 @@ use App\Repository\CategoryRepository;
 use App\Service\CategoryServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -152,6 +153,7 @@ class CategoryController extends AbstractController
         );
     }
 
+    // ...
     /**
      * Delete action.
      *
@@ -160,19 +162,32 @@ class CategoryController extends AbstractController
      *
      * @return Response HTTP response
      */
-    #[IsGranted('DELETE', subject: 'category')]
-    #[Route('/{id}', name: 'category_delete', methods: ['POST'])]
-    public function delete(Request $request, Category $category, CategoryRepository $categoryRepository): Response
+    #[Route('/{id}/delete', name: 'category_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]
+    public function delete(Request $request, Category $category): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
+        $form = $this->createForm(FormType::class, $category, [
+            'method' => 'DELETE',
+            'action' => $this->generateUrl('category_delete', ['id' => $category->getId()]),
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->categoryService->delete($category);
 
             $this->addFlash(
                 'success',
                 $this->translator->trans('message.deleted_successfully')
             );
+
+            return $this->redirectToRoute('category_index');
         }
 
-        return $this->redirectToRoute('category_index', [], Response::HTTP_SEE_OTHER);
+        return $this->render(
+            'category/delete.html.twig',
+            [
+                'form' => $form->createView(),
+                'category' => $category,
+            ]
+        );
     }
 }

@@ -8,6 +8,7 @@ use App\Repository\CommentRepository;
 use App\Service\CommentServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,7 +47,7 @@ class CommentController extends AbstractController
     /**
      * Show action.
      *
-     * @param Category $category Category
+     * @param Comment $comment Comment
      *
      * @return Response HTTP response
      */
@@ -136,21 +137,52 @@ class CommentController extends AbstractController
         ]);
     }
 
+//    /**
+//     *
+//     * Delete action.
+//     *
+//     * @param Request $request
+//     * @param Comment $comment
+//     * @param CommentRepository $commentRepository
+//     * @return Response
+//     * Delete Comment
+//     */
+//    #[IsGranted('DELETE', subject: 'comment')]
+//    #[Route('/{id}', name: 'comment_delete', methods: ['POST'])]
+//    public function delete(Request $request, Comment $comment, CommentRepository $commentRepository): Response
+//    {
+//        if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->request->get('_token'))) {
+//            $this->commentService->delete($comment);
+//
+//            $this->addFlash(
+//                'success',
+//                $this->translator->trans('message.deleted_successfully')
+//            );
+//
+//        }
+//
+//        return $this->redirectToRoute('post_index', [], Response::HTTP_SEE_OTHER);
+//    }
     /**
-     *
      * Delete action.
      *
-     * @param Request $request
-     * @param Comment $comment
-     * @param CommentRepository $commentRepository
-     * @return Response
-     * Delete Comment
+     * @param Request $request HTTP request
+     * @param Comment  $comment
+     *
+     * @return Response HTTP response
      */
-    #[IsGranted('DELETE', subject: 'comment')]
-    #[Route('/{id}', name: 'app_comment_delete', methods: ['POST'])]
-    public function delete(Request $request, Comment $comment, CommentRepository $commentRepository): Response
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/{id}/delete', name: 'comment_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]
+    public function delete(Request $request, Comment $comment): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->request->get('_token'))) {
+        $id = $comment->getPost()->getId();
+        $form = $this->createForm(FormType::class, $comment, [
+            'method' => 'DELETE',
+            'action' => $this->generateUrl('comment_delete', ['id' => $comment->getId()]),
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->commentService->delete($comment);
 
             $this->addFlash(
@@ -158,8 +190,12 @@ class CommentController extends AbstractController
                 $this->translator->trans('message.deleted_successfully')
             );
 
+            return $this->redirectToRoute('post_show', ['id' => $id]);
         }
 
-        return $this->redirectToRoute('post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->render('comment/delete.html.twig', [
+            'form' => $form->createView(),
+            'comment' => $comment,
+        ]);
     }
 }
