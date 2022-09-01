@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\Post;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use App\Service\CommentServiceInterface;
@@ -44,20 +45,6 @@ class CommentController extends AbstractController
         $this->translator = $translator;
     }
 
-    /**
-     * Show action.
-     *
-     * @param Comment $comment Comment
-     *
-     * @return Response HTTP response
-     */
-    #[Route('/{id}', name: 'comment_show', methods: ['GET'])]
-    public function show(Comment $comment): Response
-    {
-        return $this->render('comment/show.html.twig', [
-            'comment' => $comment,
-        ]);
-    }
 
     /**
      * Index action.
@@ -74,16 +61,16 @@ class CommentController extends AbstractController
         ]);
     }
 
+
     /**
      * @param Request $request
      * @param CommentRepository $commentRepository New Comment
      * @return Response
      */
     #[Route('/new', name: 'comment_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Post $post, CommentRepository $commentRepository): Response
+    public function new(Request $request,  CommentRepository $commentRepository): Response
     {
         $comment = new Comment();
-        $comment->setPost($post);
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
@@ -101,6 +88,23 @@ class CommentController extends AbstractController
         return $this->renderForm('comment/new.html.twig', [
             'comment' => $comment,
             'form' => $form,
+        ]);
+    }
+
+
+    /**
+     * Show action.
+     *
+     * @param Comment $comment Comment
+     *
+     * @return Response HTTP response
+     */
+    #[IsGranted('VIEW', subject: 'comment')]
+    #[Route('/{id}', name: 'comment_show', methods: ['GET'])]
+    public function show(Comment $comment): Response
+    {
+        return $this->render('comment/show.html.twig', [
+            'comment' => $comment,
         ]);
     }
 
@@ -137,32 +141,6 @@ class CommentController extends AbstractController
         ]);
     }
 
-//    /**
-//     *
-//     * Delete action.
-//     *
-//     * @param Request $request
-//     * @param Comment $comment
-//     * @param CommentRepository $commentRepository
-//     * @return Response
-//     * Delete Comment
-//     */
-//    #[IsGranted('DELETE', subject: 'comment')]
-//    #[Route('/{id}', name: 'comment_delete', methods: ['POST'])]
-//    public function delete(Request $request, Comment $comment, CommentRepository $commentRepository): Response
-//    {
-//        if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->request->get('_token'))) {
-//            $this->commentService->delete($comment);
-//
-//            $this->addFlash(
-//                'success',
-//                $this->translator->trans('message.deleted_successfully')
-//            );
-//
-//        }
-//
-//        return $this->redirectToRoute('post_index', [], Response::HTTP_SEE_OTHER);
-//    }
     /**
      * Delete action.
      *

@@ -24,6 +24,9 @@ class CommentControllerTest extends BaseTest
         }
     }
 
+    /**
+     * Test Index
+     */
     public function testIndex(): void
     {
         $expectedStatusCode = 200;
@@ -33,14 +36,11 @@ class CommentControllerTest extends BaseTest
         $result = $this->client->getResponse();
 
         $this->assertEquals($expectedStatusCode, $result->getStatusCode());
-
-        self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Comment index');
-
-        // Use the $crawler to perform additional assertions e.g.
-        // self::assertSame('Some text on the page', $crawler->filter('.p')->first());
     }
 
+    /**
+     * Test New
+     */
     public function testNew(): void
     {
         $expectedStatusCode = 200;
@@ -55,7 +55,6 @@ class CommentControllerTest extends BaseTest
         $this->client->request('GET', sprintf('%snew', $this->path));
         $result = $this->client->getResponse();
 
-        self::assertResponseStatusCodeSame(200);
 
         $this->client->submitForm('Save', [
             'comment[comment_text]' => 'Testing',
@@ -63,18 +62,18 @@ class CommentControllerTest extends BaseTest
             'comment[post]' => $post->getId(),
         ]);
 
-        self::assertResponseRedirects('/comment/');
-
-        self::assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
         $this->assertEquals($expectedStatusCode, $result->getStatusCode());
         $this->assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
     }
 
+    /**
+     * Test Show
+     */
     public function testShow(): void
     {
         $expectedStatusCode = 200;
         $userEmail = 'comment_show_user@example.com';
-        $adminUser = $this->createUser([UserRole::ROLE_USER->value], $userEmail);
+        $adminUser= $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'comment_show_user@example.com');
         $this->client->loginUser($adminUser);
         $category = $this->createCategory();
         $post = $this->createPost($adminUser, $category);
@@ -88,14 +87,14 @@ class CommentControllerTest extends BaseTest
         $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
         $result = $this->client->getResponse();
 
-        self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Comment');
-
         $this->assertEquals($expectedStatusCode, $result->getStatusCode());
 
         // Use assertions to check that the properties are properly displayed.
     }
 
+    /**
+     * Test Edit
+     */
     public function testEdit(): void
     {
         $expectedStatusCode = 200;
@@ -115,39 +114,11 @@ class CommentControllerTest extends BaseTest
             'comment[post]' => $post->getId(),
         ]);
 
-        $this->assertEquals($expectedStatusCode, $result->getStatusCode());
-
-        self::assertResponseRedirects('/comment/');
-
         $fixture = $this->repository->findAll();
 
-        self::assertSame('Something New', $fixture[0]->getCommentText());
-        self::assertSame('New Author', $fixture[0]->getAutor());
-    }
-
-    public function testRemove(): void
-    {
-        $originalNumObjectsInRepository = count($this->repository->findAll());
-
-        $expectedStatusCode = 200;
-        $userEmail = 'comment_remove_user@example.com';
-        $adminUser = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], $userEmail);
-        $this->client->loginUser($adminUser);
-        $category = $this->createCategory();
-        $post = $this->createPost($adminUser, $category);
-        $fixture = $this->createComment($post);
-
-//        self::assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
-//
-        $this->client->request('GET', $this->path . '/' . $fixture->getId() . '/delete');
-        $this->client->submitForm('Usuń');
-//
-        $originalNumObjectsInRepository2 = count($this->repository->findAll());
-//        self::assertSame($originalNumObjectsInRepository, count($this->repository->findAll()));
-//        self::assertResponseRedirects('/comment/');
-
-//        $result = $this->client->getResponse();
-//        $this->assertEquals(200, $result->getStatusCode());
-        $this->assertEquals($originalNumObjectsInRepository,$originalNumObjectsInRepository2 );
+        $this->assertEquals('Something New', $fixture[0]->getCommentText());
+        $this->assertEquals('New Author', $fixture[0]->getAutor());
+        $this->assertEquals($expectedStatusCode, $result->getStatusCode());
+        $this->assertResponseRedirects('/comment/');
     }
 }

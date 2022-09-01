@@ -17,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-class BaseTest extends WebTestCase
+abstract class BaseTest extends WebTestCase
 {
 
     /**
@@ -71,6 +71,21 @@ class BaseTest extends WebTestCase
     }
 
     /**
+     * Remove user
+     */
+    protected function removeUser(): void
+    {
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $entity = $userRepository->findOneBy(array('email' => 'test2@example.com'));
+
+
+        if ($entity !== null){
+            $userRepository->remove($entity);
+        }
+
+    }
+
+    /**
      * Create category.
      */
     protected function createCategory(): Category
@@ -119,62 +134,4 @@ class BaseTest extends WebTestCase
         return $comment;
 
     }
-//
-//    /**
-//     * Create Payment.
-//     * @return Payment
-//     */
-//    protected function createPayment(): Payment
-//    {
-//        $payment = new Payment();
-//        $payment->setName('TPayment');
-//        $paymentRepository = self::getContainer()->get(PaymentRepository::class);
-//        $paymentRepository->save($payment);
-//
-//        return $payment;
-//    }
-//
-//    /**
-//     * Create Operation.
-//     * @return Operation
-//     */
-//    protected function createOperation(): Operation
-//    {
-//        $operation = new Operation();
-//        $operation->setName('TOperation');
-//        $operationRepository = self::getContainer()->get(OperationRepository::class);
-//        $operationRepository->save($operation);
-//
-//        return $operation;
-//    }
-//
-//    /**
-//     * Create Tag.
-//     * @return Tag
-//     */
-//    protected function createTag(): Tag
-//    {
-//        $tag = new Tag();
-//        $tag->setName('TTag');
-//        $tagRepository = self::getContainer()->get(TagRepository::class);
-//        $tagRepository->save($tag);
-//
-//        return $tag;
-//    }
-//
-//    /**
-//     * Create Wallet.
-//     * @return Wallet
-//     */
-//    protected function createWallet(User $user): Wallet
-//    {
-//        $wallet = new Wallet();
-//        $wallet->setName('TWallet');
-//        $wallet->setBalance('1000');
-//        $wallet->setUser($user);
-//        $walletRepository = self::getContainer()->get(WalletRepository::class);
-//        $walletRepository->save($wallet);
-//
-//        return $wallet;
-//    }
 }

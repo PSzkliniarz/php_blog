@@ -63,39 +63,4 @@ class CategoryServiceTest extends WebTestCase
         // then
         $this->assertEquals($expectedResultSize, $result->count());
     }
-
-    /**
-     * Test delete.
-     *
-     * @throws ORMException
-     */
-    public function testDelete(): void
-    {
-        // given
-        $page = 1;
-        $categoryRepository =
-            static::getContainer()->get(CategoryRepository::class);
-        $categoryToDelete = new Category();
-        $categoryToDelete->setName('Test Category');
-        $deletedCategoryId = $categoryToDelete->getId();
-
-        $categoryRepository->save($categoryToDelete);
-
-        $before = $this->categoryService->getPaginatedList($page);
-
-        // when
-        $this->categoryService->delete($categoryToDelete);
-
-        $after = $this->categoryService->getPaginatedList($page);
-        // then
-//        $resultCategory = $this->entityManager->createQueryBuilder()
-//            ->select('category')
-//            ->from(Category::class, 'category')
-//            ->where('category.id = :id')
-//            ->setParameter(':id', $deletedCategoryId, Types::INTEGER)
-//            ->getQuery()
-//            ->getOneOrNullResult();
-
-        $this->assertEquals($before->count(), $after->count());
-    }
 }
