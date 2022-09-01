@@ -3,109 +3,108 @@
 namespace App\Test\Controller;
 
 use App\Entity\Category;
-use App\Repository\CategoryRepository;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Entity\Enum\UserRole;
+use App\Tests\BaseTest;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-class CategoryControllerTest extends WebTestCase
+
+class CategoryControllerTest extends BaseTest
 {
-    private KernelBrowser $client;
-    private CategoryRepository $repository;
-    private string $path = '/category/';
+    /**
+     * Test route.
+     *
+     * @const string
+     */
+    public const TEST_ROUTE = '/category';
 
-    protected function setUp(): void
+
+    /**
+     * Set up tests.
+     */
+    public function setUp(): void
     {
-        $this->client = static::createClient();
+        $this->httpClient = static::createClient();
         $this->repository = (static::getContainer()->get('doctrine'))->getRepository(Category::class);
-
-        foreach ($this->repository->findAll() as $object) {
-            $this->repository->remove($object, true);
-        }
     }
 
-    public function testIndex(): void
+    /**
+     * Test index route for Normal user.
+     *
+     */
+    public function testIndexRouteNormalUser(): void
     {
-        $crawler = $this->client->request('GET', $this->path);
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'category_user1@example.com');
+        $this->httpClient->loginUser($user);
 
-        self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Category index');
+        // when
+        $this->httpClient->request('GET', self::TEST_ROUTE);
+        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
 
-        // Use the $crawler to perform additional assertions e.g.
-        // self::assertSame('Some text on the page', $crawler->filter('.p')->first());
+        // then
+        $this->assertEquals(200, $resultStatusCode);
     }
 
+    /**
+     * Test index route for admin user.
+     *
+     */
+    public function testIndexRouteAdminUser(): void
+    {
+        // given
+        $expectedStatusCode = 200;
+        $adminUser = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'category_admin@example.com');
+        $this->httpClient->loginUser($adminUser);
+
+        // when
+        $this->httpClient->request('GET', self::TEST_ROUTE);
+        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
+
+        // then
+        $this->assertEquals($expectedStatusCode, $resultStatusCode);
+    }
+
+    /**
+     * Test New category
+     */
     public function testNew(): void
     {
+        $user= $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'category_new_admin@example.com');
+        $this->httpClient->loginUser($user);
+
         $originalNumObjectsInRepository = count($this->repository->findAll());
 
-        $this->markTestIncomplete();
-        $this->client->request('GET', sprintf('%snew', $this->path));
+        $this->httpClient->request('GET', self::TEST_ROUTE . '/create');
+        $result = $this->httpClient->getResponse();
 
-        self::assertResponseStatusCodeSame(200);
+        $this->assertEquals(200, $result->getStatusCode());
 
-        $this->client->submitForm('Save', [
+        $this->httpClient->submitForm('Save', [
             'category[name]' => 'Testing',
         ]);
 
-        self::assertResponseRedirects('/category/');
-
-        self::assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
+        $this->assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
     }
 
+    /**
+     * Test show category
+     */
     public function testShow(): void
     {
-        $this->markTestIncomplete();
+        $user= $this->createUser([UserRole::ROLE_USER->value], 'category_show_user@example.com');
+        $this->httpClient->loginUser($user);
         $fixture = new Category();
         $fixture->setName('My Title');
 
-        $this->repository->add($fixture, true);
+        $this->repository->save($fixture);
 
-        $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
+        $this->httpClient->request('GET', self::TEST_ROUTE . '/' . $fixture->getId());
 
-        self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Category');
+        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
 
-        // Use assertions to check that the properties are properly displayed.
-    }
-
-    public function testEdit(): void
-    {
-        $this->markTestIncomplete();
-        $fixture = new Category();
-        $fixture->setName('My Title');
-
-        $this->repository->add($fixture, true);
-
-        $this->client->request('GET', sprintf('%s%s/edit', $this->path, $fixture->getId()));
-
-        $this->client->submitForm('Update', [
-            'category[name]' => 'Something New',
-        ]);
-
-        self::assertResponseRedirects('/category/');
-
-        $fixture = $this->repository->findAll();
-
-        self::assertSame('Something New', $fixture[0]->getName());
-    }
-
-    public function testRemove(): void
-    {
-        $this->markTestIncomplete();
-
-        $originalNumObjectsInRepository = count($this->repository->findAll());
-
-        $fixture = new Category();
-        $fixture->setName('My Title');
-
-        $this->repository->add($fixture, true);
-
-        self::assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
-
-        $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
-        $this->client->submitForm('Delete');
-
-        self::assertSame($originalNumObjectsInRepository, count($this->repository->findAll()));
-        self::assertResponseRedirects('/category/');
+        $this->assertEquals(200, $resultStatusCode);
     }
 }

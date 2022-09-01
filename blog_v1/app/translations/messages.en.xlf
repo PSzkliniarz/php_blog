@@ -14,6 +14,10 @@
         <source>label.title</source>
         <target>Title</target>
       </trans-unit>
+      <trans-unit id="label.category">
+        <source>label.category</source>
+        <target>Category</target>
+      </trans-unit>
       <trans-unit id="label.content">
         <source>label.content</source>
         <target>Content</target>
@@ -45,6 +49,42 @@
       <trans-unit id="action_login">
         <source>action_login</source>
         <target>Login</target>
+      </trans-unit>
+      <trans-unit id="action.view">
+        <source>action.view</source>
+        <target>View</target>
+      </trans-unit>
+      <trans-unit id="action.edit">
+        <source>action.edit</source>
+        <target>Edit</target>
+      </trans-unit>
+      <trans-unit id="action.delete">
+        <source>action.delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="action.save">
+        <source>action.save</source>
+        <target>Save</target>
+      </trans-unit>
+      <trans-unit id="action.create">
+        <source>action.create</source>
+        <target>New post</target>
+      </trans-unit>
+      <trans-unit id="title.post_list">
+        <source>title.post_list</source>
+        <target>Posts</target>
+      </trans-unit>
+      <trans-unit id="title.post_edit">
+        <source>title.post_edit</source>
+        <target>Edit post</target>
+      </trans-unit>
+      <trans-unit id="title.post_create">
+        <source>title.post_create</source>
+        <target>Create post</target>
+      </trans-unit>
+      <trans-unit id="title.post_delete">
+        <source>title.post_delete</source>
+        <target>Delete post</target>
       </trans-unit>
     </body>
   </file>

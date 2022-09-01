@@ -4,11 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Post;
+use App\Entity\User;
 use App\Form\AddCommentType;
+use App\Form\CommentType;
 use App\Form\PostType;
 use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
+use App\Service\CommentService;
+use App\Service\PostService;
+use App\Service\PostServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use Monolog\DateTimeImmutable;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 /**
@@ -27,35 +33,45 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class PostController extends AbstractController
 {
     /**
-     * @param Request $request
-     * @param PostRepository $postRepository
-     * @param CategoryRepository $categoryRepository
-     * @param PaginatorInterface $paginator
-     * @return Response
-     * Show post list
+     * Post service.
      */
-    #[Route('/', name: 'app_post_index', methods: ['GET'])]
-    public function index(Request $request, PostRepository $postRepository, CategoryRepository $categoryRepository,
-                          PaginatorInterface $paginator): Response
-    {
-        $categoryId = $request->query->get('category');
-        $filteredPost = $postRepository->findBy(['category'=> $categoryId]);
-        if (count($filteredPost) > 0){
-            $returnValue = $filteredPost;
-        } else {
-            $returnValue = $postRepository->findAll();
-        }
+    private PostService $postService;
 
-        $pagination = $paginator->paginate(
-            $returnValue,
-            $request->query->getInt('page', 1),
-            PostRepository::PAGINATOR_ITEMS_PER_PAGE
+    /**
+     * Translator.
+     */
+    private TranslatorInterface $translator;
+
+    /**
+     * Constructor.
+     */
+    public function __construct(PostServiceInterface $postService, TranslatorInterface $translator)
+    {
+        $this->postService = $postService;
+        $this->translator = $translator;
+    }
+
+    /**
+     * Index action.
+     *
+     * @param Request $request HTTP Request
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        name: 'post_index',
+        methods: 'GET'
+    )]
+    public function index(Request $request): Response
+    {
+        $pagination = $this->postService->getPaginatedList(
+            $request->query->getInt('page', 1)
         );
 
-        return $this->render('post/index.html.twig', [
-            'posts' => $pagination,
-            'categories' => $categoryRepository->findAll()
-        ]);
+        return $this->render(
+            'post/index.html.twig',
+            ['pagination' => $pagination]
+        );
     }
 
     /**
@@ -65,37 +81,32 @@ class PostController extends AbstractController
      * @return Response
      * @throws \Exception
      */
-    #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PostRepository $postRepository): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         $post = new Post();
         $post->setAuthor($user);
-        $post->setCreatedAt(
-            DateTimeImmutable::createFromMutable(
-                new \DateTime('@'.strtotime('now'))
-            )
-        );
-        $post->setUpdatedAt(
-            DateTimeImmutable::createFromMutable(
-                new \DateTime('@'.strtotime('now'))
-            )
-        );
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $postRepository->add($post, true);
+            $this->postService->save($post);
 
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.created_successfully')
+            );
+
+            return $this->redirectToRoute('post_index');
         }
 
         return $this->renderForm('post/new.html.twig', [
-            'post' => $post,
             'form' => $form,
         ]);
     }
+
 
     /**
      * @param Request $request
@@ -105,7 +116,7 @@ class PostController extends AbstractController
      * @return Response
      * Show post
      */
-    #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'post_show', methods: ['GET'])]
     public function show(Request $request , Post $post, CommentRepository $commentRepository, EntityManagerInterface $em): Response
     {
         $postId = $post->getId();
@@ -116,7 +127,7 @@ class PostController extends AbstractController
             $comment->setPost($post);
             $em->persist($comment);
             $em->flush();
-            $redirectUrl = $this->generateUrl('app_post_show', ['id'=>$postId]);
+            $redirectUrl = $this->generateUrl('post_show', ['id'=>$postId]);
             return $this->redirect($redirectUrl);
         }
         $filteredComment = $commentRepository->findBy(['post'=> $postId]);
@@ -136,25 +147,24 @@ class PostController extends AbstractController
      * @return Response HTTP response
      * Edit post
      */
-    #[Route('/{id}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'post_edit', methods: ['GET', 'POST'])]
     #[IsGranted('EDIT', subject: 'post')]
     public function edit($id, Request $request, PostRepository $postRepository, EntityManagerInterface $em, Post $post): Response
     {
         $post = $postRepository->findOneBy(['id'=>$id]);
-        $post->setUpdatedAt(
-            DateTimeImmutable::createFromMutable(
-                new \DateTime('@'.strtotime('now'))
-            )
-        );
+
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            $postRepository->add($post, true);
-            $em->persist($post);
-            $em->flush();
+            $this->postService->save($post);
 
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.created_successfully')
+            );
+
+            return $this->redirectToRoute('post_index');
         }
 
         return $this->renderForm('post/edit.html.twig', [
@@ -164,19 +174,43 @@ class PostController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param Post $post
-     * @param PostRepository $postRepository Delete post
-     * @return Response
+     * Delete action.
+     *
+     * @param Request $request HTTP request
+     * @param Post    $post    Post entity
+     *
+     * @return Response HTTP response
      */
+    #[Route('/{id}/delete',
+        name: 'post_delete',
+        requirements: ['id' => '[1-9]\d*'],
+        methods: 'GET|DELETE')]
     #[IsGranted('DELETE', subject: 'post')]
-    #[Route('/{id}', name: 'app_post_delete', methods: ['POST'])]
-    public function delete(Request $request, Post $post, PostRepository $postRepository): Response
+    public function delete(Request $request, Post $post): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
-            $postRepository->remove($post, true);
+        $form = $this->createForm(PostType::class, $post, [
+            'method' => 'DELETE',
+            'action' => $this->generateUrl('post_delete', ['id' => $post->getId()]),
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->postService->delete($post);
+
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.deleted_successfully')
+            );
+
+            return $this->redirectToRoute('post_index');
         }
 
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->render(
+            'post/delete.html.twig',
+            [
+                'form' => $form->createView(),
+                'post' => $post,
+            ]
+        );
     }
 }

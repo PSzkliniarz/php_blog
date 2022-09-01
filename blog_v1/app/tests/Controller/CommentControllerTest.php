@@ -3,13 +3,14 @@
 namespace App\Test\Controller;
 
 use App\Entity\Comment;
+use App\Entity\Enum\UserRole;
 use App\Repository\CommentRepository;
+use App\Tests\BaseTest;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CommentControllerTest extends WebTestCase
+class CommentControllerTest extends BaseTest
 {
-    private KernelBrowser $client;
     private CommentRepository $repository;
     private string $path = '/comment/';
 
@@ -23,101 +24,101 @@ class CommentControllerTest extends WebTestCase
         }
     }
 
+    /**
+     * Test Index
+     */
     public function testIndex(): void
     {
+        $expectedStatusCode = 200;
+        $adminUser = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'comment_admin1@example.com');
+        $this->client->loginUser($adminUser);
         $crawler = $this->client->request('GET', $this->path);
+        $result = $this->client->getResponse();
 
-        self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Comment index');
-
-        // Use the $crawler to perform additional assertions e.g.
-        // self::assertSame('Some text on the page', $crawler->filter('.p')->first());
+        $this->assertEquals($expectedStatusCode, $result->getStatusCode());
     }
 
+    /**
+     * Test New
+     */
     public function testNew(): void
     {
+        $expectedStatusCode = 200;
+        $userEmail = 'comment_new_user@example.com';
+        $adminUser = $this->createUser([UserRole::ROLE_USER->value], $userEmail);
+        $this->client->loginUser($adminUser);
+        $category = $this->createCategory();
+        $post = $this->createPost($adminUser, $category);
+
         $originalNumObjectsInRepository = count($this->repository->findAll());
 
-        $this->markTestIncomplete();
         $this->client->request('GET', sprintf('%snew', $this->path));
+        $result = $this->client->getResponse();
 
-        self::assertResponseStatusCodeSame(200);
 
         $this->client->submitForm('Save', [
             'comment[comment_text]' => 'Testing',
-            'comment[autor]' => 'Testing',
-            'comment[post]' => 'Testing',
+            'comment[autor]' => $userEmail,
+            'comment[post]' => $post->getId(),
         ]);
 
-        self::assertResponseRedirects('/comment/');
-
-        self::assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
+        $this->assertEquals($expectedStatusCode, $result->getStatusCode());
+        $this->assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
     }
 
+    /**
+     * Test Show
+     */
     public function testShow(): void
     {
-        $this->markTestIncomplete();
+        $expectedStatusCode = 200;
+        $userEmail = 'comment_show_user@example.com';
+        $adminUser= $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'comment_show_user@example.com');
+        $this->client->loginUser($adminUser);
+        $category = $this->createCategory();
+        $post = $this->createPost($adminUser, $category);
         $fixture = new Comment();
-        $fixture->setComment_text('My Title');
-        $fixture->setAutor('My Title');
-        $fixture->setPost('My Title');
+        $fixture->setCommentText('My Title');
+        $fixture->setAutor($userEmail);
+        $fixture->setPost($post);
 
         $this->repository->add($fixture, true);
 
         $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
+        $result = $this->client->getResponse();
 
-        self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Comment');
+        $this->assertEquals($expectedStatusCode, $result->getStatusCode());
 
         // Use assertions to check that the properties are properly displayed.
     }
 
+    /**
+     * Test Edit
+     */
     public function testEdit(): void
     {
-        $this->markTestIncomplete();
-        $fixture = new Comment();
-        $fixture->setComment_text('My Title');
-        $fixture->setAutor('My Title');
-        $fixture->setPost('My Title');
-
-        $this->repository->add($fixture, true);
+        $expectedStatusCode = 200;
+        $userEmail = 'comment_edit_user@example.com';
+        $adminUser = $this->createUser([UserRole::ROLE_USER->value], $userEmail);
+        $this->client->loginUser($adminUser);
+        $category = $this->createCategory();
+        $post = $this->createPost($adminUser, $category);
+        $fixture = $this->createComment($post);
 
         $this->client->request('GET', sprintf('%s%s/edit', $this->path, $fixture->getId()));
+        $result = $this->client->getResponse();
 
         $this->client->submitForm('Update', [
             'comment[comment_text]' => 'Something New',
-            'comment[autor]' => 'Something New',
-            'comment[post]' => 'Something New',
+            'comment[autor]' => 'New Author',
+            'comment[post]' => $post->getId(),
         ]);
-
-        self::assertResponseRedirects('/comment/');
 
         $fixture = $this->repository->findAll();
 
-        self::assertSame('Something New', $fixture[0]->getComment_text());
-        self::assertSame('Something New', $fixture[0]->getAutor());
-        self::assertSame('Something New', $fixture[0]->getPost());
-    }
-
-    public function testRemove(): void
-    {
-        $this->markTestIncomplete();
-
-        $originalNumObjectsInRepository = count($this->repository->findAll());
-
-        $fixture = new Comment();
-        $fixture->setComment_text('My Title');
-        $fixture->setAutor('My Title');
-        $fixture->setPost('My Title');
-
-        $this->repository->add($fixture, true);
-
-        self::assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
-
-        $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
-        $this->client->submitForm('Delete');
-
-        self::assertSame($originalNumObjectsInRepository, count($this->repository->findAll()));
-        self::assertResponseRedirects('/comment/');
+        $this->assertEquals('Something New', $fixture[0]->getCommentText());
+        $this->assertEquals('New Author', $fixture[0]->getAutor());
+        $this->assertEquals($expectedStatusCode, $result->getStatusCode());
+        $this->assertResponseRedirects('/comment/');
     }
 }

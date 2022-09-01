@@ -3,13 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\Post;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
+use App\Service\CommentServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 /**
@@ -18,11 +22,38 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/comment')]
 class CommentController extends AbstractController
 {
+
     /**
-     * @param CommentRepository $commentRepository Show comments
-     * @return Response
+     * Comment service.
      */
-    #[Route('/', name: 'app_comment_index', methods: ['GET'])]
+    private CommentServiceInterface $commentService;
+
+    /**
+     * Translator.
+     */
+    private TranslatorInterface $translator;
+
+    /**
+     * Constructor.
+     *
+     * @param CommentServiceInterface $commentService Comment service
+     * @param TranslatorInterface     $translator     Translator
+     */
+    public function __construct(CommentServiceInterface $commentService, TranslatorInterface $translator)
+    {
+        $this->commentService = $commentService;
+        $this->translator = $translator;
+    }
+
+
+    /**
+     * Index action.
+     *
+     * @param Request $request HTTP Request
+     *
+     * @return Response HTTP response
+     */
+    #[Route('/', name: 'comment_index', methods: ['GET'])]
     public function index(CommentRepository $commentRepository): Response
     {
         return $this->render('comment/index.html.twig', [
@@ -30,22 +61,28 @@ class CommentController extends AbstractController
         ]);
     }
 
+
     /**
      * @param Request $request
      * @param CommentRepository $commentRepository New Comment
      * @return Response
      */
-    #[Route('/new', name: 'app_comment_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CommentRepository $commentRepository): Response
+    #[Route('/new', name: 'comment_new', methods: ['GET', 'POST'])]
+    public function new(Request $request,  CommentRepository $commentRepository): Response
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $commentRepository->add($comment, true);
+            $this->commentService->save($comment);
 
-            return $this->redirectToRoute('app_comment_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.created_successfully')
+            );
+
+            return $this->redirectToRoute('comment_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('comment/new.html.twig', [
@@ -54,11 +91,16 @@ class CommentController extends AbstractController
         ]);
     }
 
+
     /**
-     * @param Comment $comment Show comment
-     * @return Response
+     * Show action.
+     *
+     * @param Comment $comment Comment
+     *
+     * @return Response HTTP response
      */
-    #[Route('/{id}', name: 'app_comment_show', methods: ['GET'])]
+    #[IsGranted('VIEW', subject: 'comment')]
+    #[Route('/{id}', name: 'comment_show', methods: ['GET'])]
     public function show(Comment $comment): Response
     {
         return $this->render('comment/show.html.twig', [
@@ -66,22 +108,31 @@ class CommentController extends AbstractController
         ]);
     }
 
+
     /**
+     * Edit action.
+     *
+     * @return Response HTTP response
      * @param Request $request
      * @param Comment $comment
      * @param CommentRepository $commentRepository Edit comment
      * @return Response
      */
-    #[Route('/{id}/edit', name: 'app_comment_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'comment_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Comment $comment, CommentRepository $commentRepository): Response
     {
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $commentRepository->add($comment, true);
+            $this->commentService->save($comment);
 
-            return $this->redirectToRoute('app_comment_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.created_successfully')
+            );
+
+            return $this->redirectToRoute('comment_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('comment/edit.html.twig', [
@@ -91,20 +142,38 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param Comment $comment
-     * @param CommentRepository $commentRepository
-     * @return Response
-     * Delete Comment
+     * Delete action.
+     *
+     * @param Request $request HTTP request
+     * @param Comment  $comment
+     *
+     * @return Response HTTP response
      */
-    #[IsGranted('DELETE', subject: 'comment')]
-    #[Route('/{id}', name: 'app_comment_delete', methods: ['POST'])]
-    public function delete(Request $request, Comment $comment, CommentRepository $commentRepository): Response
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/{id}/delete', name: 'comment_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]
+    public function delete(Request $request, Comment $comment): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->request->get('_token'))) {
-            $commentRepository->remove($comment, true);
+        $id = $comment->getPost()->getId();
+        $form = $this->createForm(FormType::class, $comment, [
+            'method' => 'DELETE',
+            'action' => $this->generateUrl('comment_delete', ['id' => $comment->getId()]),
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->commentService->delete($comment);
+
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.deleted_successfully')
+            );
+
+            return $this->redirectToRoute('post_show', ['id' => $id]);
         }
 
-        return $this->redirectToRoute('app_comment_index', [], Response::HTTP_SEE_OTHER);
+        return $this->render('comment/delete.html.twig', [
+            'form' => $form->createView(),
+            'comment' => $comment,
+        ]);
     }
 }
