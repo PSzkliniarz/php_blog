@@ -19,7 +19,8 @@ class CategoryType extends AbstractType
                 'label' => 'label.name',
                 'required' => true,
                 'attr' => ['max_length' => 255],
-            ]);
+            ]
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -28,7 +29,6 @@ class CategoryType extends AbstractType
             'data_class' => Category::class,
         ]);
     }
-
 
     /**
      * Returns the prefix of the template block name for this type.

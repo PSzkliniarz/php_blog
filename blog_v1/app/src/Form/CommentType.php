@@ -20,7 +20,8 @@ class CommentType extends AbstractType
                     'label' => 'labe.comment_text',
                     'required' => true,
                     'attr' => ['max_length' => 255],
-                ])
+                ]
+            )
             ->add('autor')
             ->add('post')
         ;
@@ -32,6 +33,7 @@ class CommentType extends AbstractType
             'data_class' => Comment::class,
         ]);
     }
+
     /**
      * Returns the prefix of the template block name for this type.
      *

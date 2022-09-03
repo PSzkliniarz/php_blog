@@ -38,7 +38,7 @@ class UserRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    /**
+    /*
      * Save entity.
      *
      * @param User $user User entity

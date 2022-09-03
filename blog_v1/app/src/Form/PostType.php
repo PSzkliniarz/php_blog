@@ -20,7 +20,8 @@ class PostType extends AbstractType
                 'label' => 'label.title',
                 'required' => true,
                 'attr' => ['max_length' => 120],
-            ]);
+            ]
+        );
 
         $builder->add(
             'content',
@@ -29,7 +30,8 @@ class PostType extends AbstractType
                 'label' => 'label.content',
                 'required' => true,
                 'attr' => ['max_length' => 65000],
-            ]);
+            ]
+        );
 
         $builder->add(
             'category',
@@ -41,13 +43,10 @@ class PostType extends AbstractType
                 'choice_label' => 'name',
             ]
         );
-
     }
 
     /**
-     * Options for this type
-     * @param OptionsResolver $resolver
-     * @return void
+     * Options for this type.
      */
     public function configureOptions(OptionsResolver $resolver): void
     {

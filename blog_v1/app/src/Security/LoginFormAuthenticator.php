@@ -112,7 +112,6 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         return new RedirectResponse($this->urlGenerator->generate(self::DEFAULT_ROUTE));
     }
 
-
     /**
      * @param Request $request request to login app
      *
@@ -123,7 +122,6 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         return self::LOGIN_ROUTE === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
-
 
     /**
      * Get login URL.

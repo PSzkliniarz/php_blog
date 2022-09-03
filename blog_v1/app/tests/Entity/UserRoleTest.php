@@ -5,11 +5,19 @@ namespace App\Tests\Entity\Enum;
 use App\Entity\Enum\UserRole;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * User Role test class
+ */
 class UserRoleTest extends TestCase
 {
+    /**
+     * Test user label
+     *
+     * @return void
+     */
     public function testLabel()
     {
-        self::assertEquals('label.role_user', UserRole::ROLE_USER->label());
-        self::assertEquals('label.role_admin', UserRole::ROLE_ADMIN->label());
+        $this->assertEquals('label.role_user', UserRole::ROLE_USER->label());
+        $this->assertEquals('label.role_user', UserRole::ROLE_USER->label());
     }
 }

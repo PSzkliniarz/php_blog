@@ -6,12 +6,9 @@ use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Form\AddCommentType;
-use App\Form\CommentType;
 use App\Form\PostType;
-use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
-use App\Service\CommentService;
 use App\Service\PostService;
 use App\Service\PostServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,14 +17,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\PaginatorInterface;
-use Monolog\DateTimeImmutable;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-
 /**
- * Class PostController
+ * Class PostController.
  */
 #[Route('/post')]
 class PostController extends AbstractController
@@ -75,10 +68,9 @@ class PostController extends AbstractController
     }
 
     /**
-     * @param Request $request
      * @param PostRepository $postRepository New
-     * @param Post $post
-     * @return Response
+     * @param Post           $post
+     *
      * @throws \Exception
      */
     #[Route('/new', name: 'post_new', methods: ['GET', 'POST'])]
@@ -107,51 +99,48 @@ class PostController extends AbstractController
         ]);
     }
 
-
     /**
-     * @param Request $request
-     * @param Post $post
-     * @param CommentRepository $commentRepository
-     * @param EntityManagerInterface $em
      * @return Response
-     * Show post
+     *                  Show post
      */
     #[Route('/{id}', name: 'post_show', methods: ['GET'])]
-    public function show(Request $request , Post $post, CommentRepository $commentRepository, EntityManagerInterface $em): Response
+    public function show(Request $request, Post $post, CommentRepository $commentRepository, EntityManagerInterface $em): Response
     {
         $postId = $post->getId();
         $comment = new Comment();
         $form = $this->createForm(AddCommentType::class, $comment);
         $form->handleRequest($request);
-        if ($form->isSubmitted()){
+        if ($form->isSubmitted()) {
             $comment->setPost($post);
             $em->persist($comment);
             $em->flush();
-            $redirectUrl = $this->generateUrl('post_show', ['id'=>$postId]);
+            $redirectUrl = $this->generateUrl('post_show', ['id' => $postId]);
+
             return $this->redirect($redirectUrl);
         }
-        $filteredComment = $commentRepository->findBy(['post'=> $postId]);
+        $filteredComment = $commentRepository->findBy(['post' => $postId]);
+
         return $this->render('post/show.html.twig', [
             'post' => $post,
             'comments' => $filteredComment,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
     /**
      * Edit action.
      *
-     * @param Request     $request     HTTP request
-     * @param Post $post Post entity
+     * @param Request $request HTTP request
+     * @param Post    $post    Post entity
      *
      * @return Response HTTP response
-     * Edit post
+     *                  Edit post
      */
     #[Route('/{id}/edit', name: 'post_edit', methods: ['GET', 'POST'])]
     #[IsGranted('EDIT', subject: 'post')]
     public function edit($id, Request $request, PostRepository $postRepository, EntityManagerInterface $em, Post $post): Response
     {
-        $post = $postRepository->findOneBy(['id'=>$id]);
+        $post = $postRepository->findOneBy(['id' => $id]);
 
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
@@ -181,10 +170,12 @@ class PostController extends AbstractController
      *
      * @return Response HTTP response
      */
-    #[Route('/{id}/delete',
+    #[Route(
+        '/{id}/delete',
         name: 'post_delete',
         requirements: ['id' => '[1-9]\d*'],
-        methods: 'GET|DELETE')]
+        methods: 'GET|DELETE'
+    )]
     #[IsGranted('DELETE', subject: 'post')]
     public function delete(Request $request, Post $post): Response
     {

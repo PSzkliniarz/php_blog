@@ -41,8 +41,6 @@ class CategoryVoter extends Voter
 
     /**
      * Security helper.
-     *
-     * @var Security
      */
     private Security $security;
 
@@ -103,39 +101,39 @@ class CategoryVoter extends Voter
      * Checks if user can edit category.
      *
      * @param Category $category Category entity
-     * @param User $user User
+     * @param User     $user     User
      *
      * @return bool Result
      */
     private function canEdit(Category $category, User $user): bool
     {
-        return (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
+        return in_array(UserRole::ROLE_ADMIN->value, $user->getRoles());
     }
 
     /**
      * Checks if user can view category.
      *
      * @param Category $category Category entity
-     * @param User $user User
+     * @param User     $user     User
      *
      * @return bool Result
      */
     private function canView(Category $category, User $user): bool
     {
         return $category->getAuthor() === $user or
-            (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
+            in_array(UserRole::ROLE_ADMIN->value, $user->getRoles());
     }
 
     /**
      * Checks if user can delete category.
      *
      * @param Category $category Category entity
-     * @param User $user User
+     * @param User     $user     User
      *
      * @return bool Result
      */
     private function canDelete(Category $category, User $user): bool
     {
-        return (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));;
+        return in_array(UserRole::ROLE_ADMIN->value, $user->getRoles());
     }
 }

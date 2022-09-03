@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
-use App\Entity\Post;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use App\Service\CommentServiceInterface;
@@ -15,14 +14,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-
 /**
- * Class CommentController
+ * Class CommentController.
  */
 #[Route('/comment')]
 class CommentController extends AbstractController
 {
-
     /**
      * Comment service.
      */
@@ -45,7 +42,6 @@ class CommentController extends AbstractController
         $this->translator = $translator;
     }
 
-
     /**
      * Index action.
      *
@@ -61,14 +57,11 @@ class CommentController extends AbstractController
         ]);
     }
 
-
     /**
-     * @param Request $request
      * @param CommentRepository $commentRepository New Comment
-     * @return Response
      */
     #[Route('/new', name: 'comment_new', methods: ['GET', 'POST'])]
-    public function new(Request $request,  CommentRepository $commentRepository): Response
+    public function new(Request $request, CommentRepository $commentRepository): Response
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
@@ -91,7 +84,6 @@ class CommentController extends AbstractController
         ]);
     }
 
-
     /**
      * Show action.
      *
@@ -108,15 +100,12 @@ class CommentController extends AbstractController
         ]);
     }
 
-
     /**
      * Edit action.
      *
-     * @return Response HTTP response
-     * @param Request $request
-     * @param Comment $comment
      * @param CommentRepository $commentRepository Edit comment
-     * @return Response
+     *
+     * @return Response HTTP response
      */
     #[IsGranted('EDIT', subject: 'comment')]
     #[Route('/{id}/edit', name: 'comment_edit', methods: ['GET', 'POST'])]
@@ -146,7 +135,6 @@ class CommentController extends AbstractController
      * Delete action.
      *
      * @param Request $request HTTP request
-     * @param Comment  $comment
      *
      * @return Response HTTP response
      */

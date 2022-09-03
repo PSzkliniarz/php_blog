@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
-use App\Repository\CategoryRepository;
 use App\Service\CategoryServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,9 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-
 /**
- * Class CategoryController
+ * Class CategoryController.
  */
 #[Route('/category')]
 class CategoryController extends AbstractController
@@ -52,7 +50,8 @@ class CategoryController extends AbstractController
      */
     #[Route(
         name: 'category_index',
-        methods: 'GET')]
+        methods: 'GET'
+    )]
     public function index(Request $request): Response
     {
         $pagination = $this->categoryService->getPaginatedList(
@@ -121,7 +120,9 @@ class CategoryController extends AbstractController
      * @return Response HTTP response
      */
     #[IsGranted('EDIT', subject: 'category')]
-    #[Route('/{id}/edit', name: 'category_edit',
+    #[Route(
+        '/{id}/edit',
+        name: 'category_edit',
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET|PUT'
     )]

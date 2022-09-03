@@ -87,7 +87,6 @@ class PostRepository extends ServiceEntityRepository
         $this->_em->flush();
     }
 
-
     /**
      * Delete entity.
      *

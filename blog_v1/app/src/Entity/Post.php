@@ -3,11 +3,9 @@
 namespace App\Entity;
 
 use App\Entity\Traits\TimestampableTrait;
-use Gedmo\Mapping\Annotation as Gedmo;
 use DateTimeImmutable;
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
-
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -32,31 +30,24 @@ class Post
 
     /**
      * Created at.
-     *
-     * @var DateTimeImmutable|null
      */
     #[ORM\Column(type: 'datetime_immutable')]
     private ?DateTimeImmutable $createdAt;
 
     /**
      * Updated at.
-     *
-     * @var DateTimeImmutable|null
      */
     #[ORM\Column(type: 'datetime_immutable')]
     private ?DateTimeImmutable $updatedAt;
 
     /**
      * Author.
-     *
-     * @var User|null
      */
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
     #[Assert\Type(User::class)]
     private ?User $author;
-
 
     /**
      * Comments.
@@ -65,7 +56,6 @@ class Post
      */
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private $comments;
-
 
     public function getId(): ?int
     {
@@ -96,7 +86,8 @@ class Post
         return $this;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->title;
     }
 
