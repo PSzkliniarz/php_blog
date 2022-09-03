@@ -58,15 +58,6 @@ class Post
     private ?User $author;
 
 
-    /**
-     * Comments.
-     *
-     * @var ArrayCollection
-     */
-    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
-    private $comments;
-
-
     public function getId(): ?int
     {
         return $this->id;
