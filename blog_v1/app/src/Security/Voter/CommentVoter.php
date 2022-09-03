@@ -109,8 +109,7 @@ class CommentVoter extends Voter
      */
     private function canEdit(Comment $comment, User $user): bool
     {
-        return $comment->getAuthor() === $user or
-            (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
+        return (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
     }
 
     /**

@@ -19,9 +19,9 @@ class Comment
     #[ORM\Column(type: 'string', length: 255)]
     private $autor;
 
-    #[ORM\ManyToOne(targetEntity: Post::class)]
+    #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    private $post;
+    private Post $post;
 
     public function getId(): ?int
     {

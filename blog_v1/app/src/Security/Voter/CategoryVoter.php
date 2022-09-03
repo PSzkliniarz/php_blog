@@ -136,6 +136,6 @@ class CategoryVoter extends Voter
      */
     private function canDelete(Category $category, User $user): bool
     {
-        return (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
+        return (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));;
     }
 }

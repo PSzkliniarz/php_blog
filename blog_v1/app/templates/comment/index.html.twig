@@ -1,17 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Comment index{% endblock %}
+{% block title %}
+    {{ 'title.comment_list'|trans }}
+{% endblock %}
 
 {% block body %}
-    <h1>Comment index</h1>
+    <h1>{{ 'title.comment_list'|trans }}</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Comment_text</th>
-                <th>Autor</th>
-                <th>Actions</th>
+                <th>{{ 'label.id'|trans }}</th>
+                <th>{{ 'label.comment_text'|trans }}</th>
+                <th>{{ 'label.author'|trans }}</th>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th>{{ 'label.actions'|trans }}</th>
+                {% endif %}
 
             </tr>
         </thead>
@@ -22,19 +26,31 @@
                 <td>{{ comment.commentText }}</td>
                 <td>{{ comment.autor }}</td>
                 <td>
-                    <a href="{{ path('comment_show', {'id': comment.id}) }}">show</a>
-                    <a href="{{ path('comment_edit', {'id': comment.id}) }}">edit</a>
-                    <a href="{{ path('comment_delete', {'id': comment.id}) }}">delete</a>
+                    {% if is_granted('VIEW', comment) %}
+                        <a href="{{ path('comment_show', {'id': comment.id}) }} title="{{ 'action.view'|trans }}">
+                            {{ 'action.view'|trans }}
+                        </a>
+                    {% endif %}
+                    {% if is_granted('EDIT', comment) %}
+                        <a href="{{ path('comment_edit', {'id': comment.id}) }} title="{{ 'action.edit'|trans }}">
+                            {{ 'action.edit'|trans }}
+                        </a>
+                    {% endif %}
+                    {% if is_granted('DELETE', comment) %}
+                        <a href="{{ path('comment_delete', {'id': comment.id}) }} title="{{ 'action.delete'|trans }}">
+                            {{ 'action.delete'|trans }}
+                        </a>
+                    {% endif %}
                 </td>
 
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="4">{{ 'message.empty_list'|trans }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('comment_new') }}">Create new</a>
+    <a href="{{ path('comment_new') }}">{{ 'title.comment_create'|trans }}</a>
 {% endblock %}

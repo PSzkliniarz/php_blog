@@ -35,9 +35,9 @@ class PostType extends AbstractType
             'category',
             EntityType::class,
             [
-                'label' => 'label_category',
+                'label' => 'title.category',
                 'class' => "App\Entity\Category",
-                'placeholder' => 'label_category',
+                'placeholder' => 'title.category',
                 'choice_label' => 'name',
             ]
         );

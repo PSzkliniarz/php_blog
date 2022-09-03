@@ -99,7 +99,7 @@ class CommentControllerTest extends BaseTest
     {
         $expectedStatusCode = 200;
         $userEmail = 'comment_edit_user@example.com';
-        $adminUser = $this->createUser([UserRole::ROLE_USER->value], $userEmail);
+        $adminUser = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], $userEmail);
         $this->client->loginUser($adminUser);
         $category = $this->createCategory();
         $post = $this->createPost($adminUser, $category);

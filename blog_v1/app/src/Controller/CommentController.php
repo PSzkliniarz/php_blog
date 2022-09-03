@@ -118,6 +118,7 @@ class CommentController extends AbstractController
      * @param CommentRepository $commentRepository Edit comment
      * @return Response
      */
+    #[IsGranted('EDIT', subject: 'comment')]
     #[Route('/{id}/edit', name: 'comment_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Comment $comment, CommentRepository $commentRepository): Response
     {

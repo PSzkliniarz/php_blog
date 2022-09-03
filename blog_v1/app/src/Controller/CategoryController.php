@@ -162,6 +162,7 @@ class CategoryController extends AbstractController
      *
      * @return Response HTTP response
      */
+    #[IsGranted('DELETE', subject: 'category')]
     #[Route('/{id}/delete', name: 'category_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]
     public function delete(Request $request, Category $category): Response
     {

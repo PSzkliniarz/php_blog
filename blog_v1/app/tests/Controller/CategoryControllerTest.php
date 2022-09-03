@@ -5,10 +5,6 @@ namespace App\Test\Controller;
 use App\Entity\Category;
 use App\Entity\Enum\UserRole;
 use App\Tests\BaseTest;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\OptimisticLockException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 
 class CategoryControllerTest extends BaseTest

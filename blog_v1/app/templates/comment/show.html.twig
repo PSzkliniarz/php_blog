@@ -1,28 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Comment{% endblock %}
+{% block title %}{{ 'title.comment'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>Comment</h1>
+    <h1>{{ 'title.comment'|trans }}</h1>
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>{{ 'label.id'|trans }}</th>
                 <td>{{ comment.id }}</td>
             </tr>
             <tr>
-                <th>Comment_text</th>
+                <th>{{ 'label.comment_text'|trans }}</th>
                 <td>{{ comment.commentText }}</td>
             </tr>
             <tr>
-                <th>Autor</th>
+                <th>{{ 'label.author'|trans }}</th>
                 <td>{{ comment.autor }}</td>
             </tr>
         </tbody>
     </table>
-
-{#    <a href="{{ path('comment_edit', {'id': comment.id}) }}">edit</a>#}
 
     {% if is_granted('DELETE', comment) %}
         {{ include('comment/_delete_form.html.twig') }}
