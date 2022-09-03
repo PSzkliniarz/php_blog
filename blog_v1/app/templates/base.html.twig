@@ -10,7 +10,7 @@
     </head>
     <body>
         <div style="width: 85%; margin:20px auto">
-            <div style="
+            <div class="py-3" style="
             padding: 5px;
             background-color: #9ED2C6;
             border-radius: 5px;
@@ -19,12 +19,6 @@
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <div>{{ app.user.email }}</div>
                     <div>
-                        <a style="margin:15px" href="{{ url('post_index') }}">Posty</a>
-                        <a style="margin:15px" href="{{ url('category_index') }}">Kategorie</a>
-                        <a style="margin:15px" href="{{ path('post_new') }}">Nowy Post</a>
-                        <a style="margin:15px" href="{{ path('category_new') }}">Nowa kategoria</a>
-                    </div>
-                    <div>
                         <a href="{{ url('app_logout') }}">{{ 'action_logout'|trans }}</a>
                     </div>
                 {% else %}
@@ -32,6 +26,10 @@
                         <a href="{{ url('app_login') }}">{{ 'action_login'|trans }}</a>
                     </div>
                 {% endif %}
+                <div>
+                    <a style="margin:15px" href="{{ url('post_index') }}">{{ 'title.post_list'|trans }}</a>
+                    <a style="margin:15px" href="{{ url('category_index') }}">{{ 'title.category_list'|trans }}</a>
+                </div>
             </div>
             <div class="container-fluid">
                 {% for type, messages in app.session.flashBag.all %}

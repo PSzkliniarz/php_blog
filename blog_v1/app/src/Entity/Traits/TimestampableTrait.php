@@ -1,35 +1,47 @@
 <?php
+/**
+ * Timestample
+ */
 
 namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+/**
+ * TimestampleTrait
+ */
 trait TimestampableTrait
 {
-
     /**
-     * \DateTime
+     * \DateTime.
+     *
      * @Gedmo\Timestampable(on="create")
      */
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected $createdAt;
 
-
     /**
-     * \DateTime
-     * @Gedmo\Timestampable(on="update")
+     * @var Datatime
      */
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected $updatedAt;
 
-    public function __construct() {
+    /**
+     * Construct
+     */
+    public function __construct()
+    {
         $this->setCreatedAt(new \DateTime());
         $this->setUpdatedAt(new \DateTime());
     }
 
+    /**
+     * @return void
+     */
     #[ORM\Preupdate]
-    public function setUpdatedAtValue() {
+    public function setUpdatedAtValue()
+    {
         $this->setUpdatedAt(new \DateTime());
     }
 
@@ -37,6 +49,7 @@ trait TimestampableTrait
      * Set the value of createdAt.
      *
      * @param \DateTime $createdAt
+     *
      * @return mixed
      */
     public function setCreatedAt($createdAt)
@@ -60,6 +73,7 @@ trait TimestampableTrait
      * Set the value of updatedAt.
      *
      * @param \DateTime $updatedAt
+     *
      * @return mixed
      */
     public function setUpdatedAt($updatedAt)
@@ -78,7 +92,4 @@ trait TimestampableTrait
     {
         return $this->updatedAt;
     }
-
-
-
 }

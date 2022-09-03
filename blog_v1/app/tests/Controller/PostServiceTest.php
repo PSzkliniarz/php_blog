@@ -39,9 +39,9 @@ class PostServiceTest extends BaseTest
 
 
     /**
-     * Test delete.
-     *
-     * @throws ORMException
+     * @return void
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function testDelete(): void
     {

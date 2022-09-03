@@ -60,7 +60,7 @@ class PostService implements PostServiceInterface
      */
     public function save(Post $post): void
     {
-        if (null == $post->getId()) {
+        if (null === $post->getId()) {
             $post->setCreatedAt(new \DateTimeImmutable());
         }
         $post->setUpdatedAt(new \DateTimeImmutable());

@@ -1,9 +1,11 @@
 <?php
+/**
+ * Comment controller
+ */
 
 namespace App\Controller;
 
 use App\Entity\Comment;
-use App\Entity\Post;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use App\Service\CommentServiceInterface;
@@ -15,14 +17,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-
 /**
- * Class CommentController
+ * Class CommentController.
  */
 #[Route('/comment')]
 class CommentController extends AbstractController
 {
-
     /**
      * Comment service.
      */
@@ -45,13 +45,10 @@ class CommentController extends AbstractController
         $this->translator = $translator;
     }
 
-
     /**
-     * Index action.
+     * @param CommentRepository $commentRepository
      *
-     * @param Request $request HTTP Request
-     *
-     * @return Response HTTP response
+     * @return Response
      */
     #[Route('/', name: 'comment_index', methods: ['GET'])]
     public function index(CommentRepository $commentRepository): Response
@@ -61,14 +58,14 @@ class CommentController extends AbstractController
         ]);
     }
 
-
     /**
-     * @param Request $request
-     * @param CommentRepository $commentRepository New Comment
+     * @param Request           $request
+     * @param CommentRepository $commentRepository
+     *
      * @return Response
      */
     #[Route('/new', name: 'comment_new', methods: ['GET', 'POST'])]
-    public function new(Request $request,  CommentRepository $commentRepository): Response
+    public function new(Request $request, CommentRepository $commentRepository): Response
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
@@ -91,7 +88,6 @@ class CommentController extends AbstractController
         ]);
     }
 
-
     /**
      * Show action.
      *
@@ -108,16 +104,14 @@ class CommentController extends AbstractController
         ]);
     }
 
-
     /**
-     * Edit action.
+     * @param Request           $request
+     * @param Comment           $comment
+     * @param CommentRepository $commentRepository
      *
-     * @return Response HTTP response
-     * @param Request $request
-     * @param Comment $comment
-     * @param CommentRepository $commentRepository Edit comment
      * @return Response
      */
+    #[IsGranted('EDIT', subject: 'comment')]
     #[Route('/{id}/edit', name: 'comment_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Comment $comment, CommentRepository $commentRepository): Response
     {
@@ -142,12 +136,10 @@ class CommentController extends AbstractController
     }
 
     /**
-     * Delete action.
+     * @param Request $request
+     * @param Comment $comment
      *
-     * @param Request $request HTTP request
-     * @param Comment  $comment
-     *
-     * @return Response HTTP response
+     * @return Response
      */
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/delete', name: 'comment_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]

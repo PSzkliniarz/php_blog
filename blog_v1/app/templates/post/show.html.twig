@@ -1,42 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Post{% endblock %}
+{% block title %}{{ 'label.post'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>Post</h1>
+    <h1>{{ 'label.post'|trans }}</h1>
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>{{ 'label.id'|trans }}</th>
                 <td>{{ post.id }}</td>
             </tr>
             <tr>
-                <th>Title</th>
+                <th>{{ 'label.title'|trans }}</th>
                 <td>{{ post.title }}</td>
             </tr>
             <tr>
-                <th>Content</th>
+                <th>{{ 'label.content'|trans }}</th>
                 <td>{{ post.content }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('post_index') }}">back to list</a>
+    <a class="mx-3 my-3" href="{{ path('post_index') }}">{{ 'label.back'|trans }}</a>
 
     {% if is_granted('EDIT', post) %}
-        <a href="{{ path('post_edit', {'id': post.id}) }}">edit</a>
+        <a class="mx-3 my-3" href="{{ path('post_edit', {'id': post.id}) }}">{{ 'action.edit'|trans }}</a>
     {% endif %}
 
     {% if is_granted('DELETE', post) %}
-        <a href="{{ path('post_delete', {'id': post.id}) }}">DELETE</a>
+        <a class="mx-3 my-3" href="{{ path('post_delete', {'id': post.id}) }}">{{ 'action.delete'|trans }}</a>
     {% endif %}
     <table class="table">
         <thead>
         <tr>
-            <th>Comment_text</th>
-            <th>Author</th>
-            <th>actions</th>
+            <th>{{ 'label.comment_text'|trans }}</th>
+            <th>{{ 'label.author'|trans }}</th>
+            {% if is_granted('DELETE', post) %}
+                <th>{{ 'label.actions'|trans }}</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -44,20 +46,23 @@
             <tr>
                 <td>{{ comment.commentText }}</td>
                 <td>{{ comment.autor }}</td>
-                <td>
-                    <a href="{{ path('comment_delete', {'id': comment.id}) }}">delete</a>
-                </td>
+                {% if is_granted('DELETE', comment) %}
+                    <td>
+                        <a href="{{ path('comment_delete', {'id': comment.id}) }} title="{{ 'action.delete'|trans }}">
+                            {{ 'action.delete'|trans }}
+                        </a>
+                    </td>
+                {% endif %}
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="4">{{ 'message.empty_list'|trans }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     {{ form_start(form, {'action': path('post_show', {'id': post.id}), 'method': 'GET'}) }}
     {{ form_widget(form) }}
-{#    <button class="btn">{{ button_label|default('Save') }}</button>#}
     {{ form_end(form) }}
 
 {% endblock %}

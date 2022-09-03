@@ -41,8 +41,6 @@ class CommentVoter extends Voter
 
     /**
      * Security helper.
-     *
-     * @var Security
      */
     private Security $security;
 
@@ -103,39 +101,38 @@ class CommentVoter extends Voter
      * Checks if user can edit comment.
      *
      * @param Comment $comment Comment entity
-     * @param User $user User
+     * @param User    $user    User
      *
      * @return bool Result
      */
     private function canEdit(Comment $comment, User $user): bool
     {
-        return $comment->getAuthor() === $user or
-            (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
+        return in_array(UserRole::ROLE_ADMIN->value, $user->getRoles());
     }
 
     /**
      * Checks if user can view comment.
      *
      * @param Comment $comment Comment entity
-     * @param User $user User
+     * @param User    $user    User
      *
      * @return bool Result
      */
     private function canView(Comment $comment, User $user): bool
     {
-        return (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
+        return in_array(UserRole::ROLE_ADMIN->value, $user->getRoles());
     }
 
     /**
      * Checks if user can delete comment.
      *
      * @param Comment $comment Comment entity
-     * @param User $user User
+     * @param User    $user    User
      *
      * @return bool Result
      */
     private function canDelete(Comment $comment, User $user): bool
     {
-        return (in_array(UserRole::ROLE_ADMIN->value, $user->getRoles()));
+        return in_array(UserRole::ROLE_ADMIN->value, $user->getRoles());
     }
 }

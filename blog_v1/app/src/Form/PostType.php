@@ -1,4 +1,7 @@
 <?php
+/**
+ * Post type.
+ */
 
 namespace App\Form;
 
@@ -9,8 +12,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * PostType class
+ */
 class PostType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array                $options
+     *
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add(
@@ -20,7 +32,8 @@ class PostType extends AbstractType
                 'label' => 'label.title',
                 'required' => true,
                 'attr' => ['max_length' => 120],
-            ]);
+            ]
+        );
 
         $builder->add(
             'content',
@@ -29,24 +42,24 @@ class PostType extends AbstractType
                 'label' => 'label.content',
                 'required' => true,
                 'attr' => ['max_length' => 65000],
-            ]);
+            ]
+        );
 
         $builder->add(
             'category',
             EntityType::class,
             [
-                'label' => 'label_category',
+                'label' => 'title.category',
                 'class' => "App\Entity\Category",
-                'placeholder' => 'label_category',
+                'placeholder' => 'title.category',
                 'choice_label' => 'name',
             ]
         );
-
     }
 
     /**
-     * Options for this type
      * @param OptionsResolver $resolver
+     *
      * @return void
      */
     public function configureOptions(OptionsResolver $resolver): void
@@ -57,10 +70,7 @@ class PostType extends AbstractType
     }
 
     /**
-     * Returns the prefix of the template block name for this type.
-     *
-     * The block prefix defaults to the underscored short class name with
-     * the "Type" suffix removed (e.g. "UserProfileType" => "user_profile").
+     * @return string
      */
     public function getBlockPrefix(): string
     {
