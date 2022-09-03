@@ -1,10 +1,16 @@
 <?php
+/**
+ * Timestample
+ */
 
 namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+/**
+ * TimestampleTrait
+ */
 trait TimestampableTrait
 {
     /**
@@ -16,19 +22,23 @@ trait TimestampableTrait
     protected $createdAt;
 
     /**
-     * \DateTime.
-     *
-     * @Gedmo\Timestampable(on="update")
+     * @var Datatime
      */
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected $updatedAt;
 
+    /**
+     * Construct
+     */
     public function __construct()
     {
         $this->setCreatedAt(new \DateTime());
         $this->setUpdatedAt(new \DateTime());
     }
 
+    /**
+     * @return void
+     */
     #[ORM\Preupdate]
     public function setUpdatedAtValue()
     {

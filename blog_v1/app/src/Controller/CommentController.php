@@ -1,4 +1,7 @@
 <?php
+/**
+ * Comment controller
+ */
 
 namespace App\Controller;
 
@@ -43,11 +46,9 @@ class CommentController extends AbstractController
     }
 
     /**
-     * Index action.
+     * @param CommentRepository $commentRepository
      *
-     * @param Request $request HTTP Request
-     *
-     * @return Response HTTP response
+     * @return Response
      */
     #[Route('/', name: 'comment_index', methods: ['GET'])]
     public function index(CommentRepository $commentRepository): Response
@@ -58,7 +59,10 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @param CommentRepository $commentRepository New Comment
+     * @param Request           $request
+     * @param CommentRepository $commentRepository
+     *
+     * @return Response
      */
     #[Route('/new', name: 'comment_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CommentRepository $commentRepository): Response
@@ -101,11 +105,11 @@ class CommentController extends AbstractController
     }
 
     /**
-     * Edit action.
+     * @param Request           $request
+     * @param Comment           $comment
+     * @param CommentRepository $commentRepository
      *
-     * @param CommentRepository $commentRepository Edit comment
-     *
-     * @return Response HTTP response
+     * @return Response
      */
     #[IsGranted('EDIT', subject: 'comment')]
     #[Route('/{id}/edit', name: 'comment_edit', methods: ['GET', 'POST'])]
@@ -132,11 +136,10 @@ class CommentController extends AbstractController
     }
 
     /**
-     * Delete action.
+     * @param Request $request
+     * @param Comment $comment
      *
-     * @param Request $request HTTP request
-     *
-     * @return Response HTTP response
+     * @return Response
      */
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/delete', name: 'comment_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Post controller
+ */
 
 namespace App\Controller;
 
@@ -36,7 +39,8 @@ class PostController extends AbstractController
     private TranslatorInterface $translator;
 
     /**
-     * Constructor.
+     * @param PostServiceInterface $postService
+     * @param TranslatorInterface  $translator
      */
     public function __construct(PostServiceInterface $postService, TranslatorInterface $translator)
     {
@@ -68,10 +72,10 @@ class PostController extends AbstractController
     }
 
     /**
-     * @param PostRepository $postRepository New
-     * @param Post           $post
+     * @param Request        $request
+     * @param PostRepository $postRepository
      *
-     * @throws \Exception
+     * @return Response
      */
     #[Route('/new', name: 'post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PostRepository $postRepository): Response
@@ -100,8 +104,12 @@ class PostController extends AbstractController
     }
 
     /**
+     * @param Request                $request
+     * @param Post                   $post
+     * @param CommentRepository      $commentRepository
+     * @param EntityManagerInterface $em
+     *
      * @return Response
-     *                  Show post
      */
     #[Route('/{id}', name: 'post_show', methods: ['GET'])]
     public function show(Request $request, Post $post, CommentRepository $commentRepository, EntityManagerInterface $em): Response
@@ -128,13 +136,13 @@ class PostController extends AbstractController
     }
 
     /**
-     * Edit action.
+     * @param $id
+     * @param Request                $request
+     * @param PostRepository         $postRepository
+     * @param EntityManagerInterface $em
+     * @param Post                   $post
      *
-     * @param Request $request HTTP request
-     * @param Post    $post    Post entity
-     *
-     * @return Response HTTP response
-     *                  Edit post
+     * @return Response
      */
     #[Route('/{id}/edit', name: 'post_edit', methods: ['GET', 'POST'])]
     #[IsGranted('EDIT', subject: 'post')]

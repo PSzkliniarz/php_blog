@@ -1,4 +1,7 @@
 <?php
+/**
+ * Category entity
+ */
 
 namespace App\Entity;
 
@@ -8,6 +11,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Category class
+ */
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
 {
@@ -20,24 +26,41 @@ class Category
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    /**
+     * @var ArrayCollection
+     */
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Post::class, orphanRemoval: true)]
     private $posts;
 
+    /**
+     * Construct
+     */
     public function __construct()
     {
         $this->posts = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -45,6 +68,9 @@ class Category
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function __toString()
     {
         return $this->name;
@@ -58,6 +84,11 @@ class Category
         return $this->posts;
     }
 
+    /**
+     * @param Post $post
+     *
+     * @return $this
+     */
     public function addPost(Post $post): self
     {
         if (!$this->posts->contains($post)) {
@@ -68,6 +99,11 @@ class Category
         return $this;
     }
 
+    /**
+     * @param Post $post
+     *
+     * @return $this
+     */
     public function removePost(Post $post): self
     {
         if ($this->posts->removeElement($post)) {

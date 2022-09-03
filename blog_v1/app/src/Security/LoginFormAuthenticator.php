@@ -69,6 +69,8 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
      *
      * @return Passport Passport
      *
+     * @param Request $request Request
+     *
      * @throws AuthenticationException
      */
     public function authenticate(Request $request): Passport
