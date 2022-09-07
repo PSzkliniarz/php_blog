@@ -131,7 +131,7 @@
         <target>Stwórz</target>
       </trans-unit>
       <trans-unit id="label.post">
-        <source>title.label</source>
+        <source>label.post</source>
         <target>Post</target>
       </trans-unit>
       <trans-unit id="title.post_list">
