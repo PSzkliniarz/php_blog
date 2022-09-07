@@ -11,13 +11,18 @@
     <body>
         <div style="width: 85%; margin:20px auto">
             <div class="py-3" style="
-            padding: 5px;
+            padding: 5px 5px 5px 15px;
             background-color: #9ED2C6;
             border-radius: 5px;
             display: flex;
             justify-content: space-between">
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <div>{{ app.user.email }}</div>
+                    {% if is_granted('EDIT', app.user) %}
+                        <div>
+                            <a href="{{ url('user_edit', {'id':app.user.id}) }}">{{'label.password_change'|trans}}</a>
+                        </div>
+                    {% endif %}
                     <div>
                         <a href="{{ url('app_logout') }}">{{ 'action_logout'|trans }}</a>
                     </div>

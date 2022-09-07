@@ -12,7 +12,7 @@ use DateTimeImmutable;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 /**
- * Class TaskFixtures.
+ * Class PostFixtures.
  */
 class PostFixtures extends AbstractBaseFixtures implements DependentFixtureInterface
 {

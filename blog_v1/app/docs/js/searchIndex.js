@@ -223,7 +223,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\App\\DataFixtures\\PostFixtures",
             "name": "PostFixtures",
-            "summary": "Class\u0020TaskFixtures.",
+            "summary": "Class\u0020PostFixtures.",
             "url": "classes/App-DataFixtures-PostFixtures.html"
         },                {
             "fqsen": "\\App\\DataFixtures\\PostFixtures\u003A\u003AloadData\u0028\u0029",
@@ -841,6 +841,16 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/App-Repository-UserRepository.html#method_remove"
         },                {
+            "fqsen": "\\App\\Repository\\UserRepository\u003A\u003AupgradePassword\u0028\u0029",
+            "name": "upgradePassword",
+            "summary": "Used\u0020to\u0020upgrade\u0020\u0028rehash\u0029\u0020the\u0020user\u0027s\u0020password\u0020automatically\u0020over\u0020time.",
+            "url": "classes/App-Repository-UserRepository.html#method_upgradePassword"
+        },                {
+            "fqsen": "\\App\\Repository\\UserRepository\u003A\u003Asave\u0028\u0029",
+            "name": "save",
+            "summary": "Save\u0020entity.",
+            "url": "classes/App-Repository-UserRepository.html#method_save"
+        },                {
             "fqsen": "\\App\\Security\\LoginFormAuthenticator",
             "name": "LoginFormAuthenticator",
             "summary": "Class\u0020LoginFormAuthenticator.",
@@ -1211,6 +1221,101 @@ Search.appendIndex(
             "summary": "Delete\u0020entity.",
             "url": "classes/App-Service-PostServiceInterface.html#method_delete"
         },                {
+            "fqsen": "\\App\\Controller\\UserController",
+            "name": "UserController",
+            "summary": "Class\u0020UserController.",
+            "url": "classes/App-Controller-UserController.html"
+        },                {
+            "fqsen": "\\App\\Controller\\UserController\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "Constructor.",
+            "url": "classes/App-Controller-UserController.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Controller\\UserController\u003A\u003AchangePassword\u0028\u0029",
+            "name": "changePassword",
+            "summary": "Change\u0020password\u0020action.",
+            "url": "classes/App-Controller-UserController.html#method_changePassword"
+        },                {
+            "fqsen": "\\App\\Controller\\UserController\u003A\u003A\u0024userService",
+            "name": "userService",
+            "summary": "User\u0020service.",
+            "url": "classes/App-Controller-UserController.html#property_userService"
+        },                {
+            "fqsen": "\\App\\Controller\\UserController\u003A\u003A\u0024translator",
+            "name": "translator",
+            "summary": "Translator.",
+            "url": "classes/App-Controller-UserController.html#property_translator"
+        },                {
+            "fqsen": "\\App\\Form\\Type\\UserType",
+            "name": "UserType",
+            "summary": "Class\u0020UserType.",
+            "url": "classes/App-Form-Type-UserType.html"
+        },                {
+            "fqsen": "\\App\\Form\\Type\\UserType\u003A\u003AbuildForm\u0028\u0029",
+            "name": "buildForm",
+            "summary": "Builds\u0020the\u0020form.",
+            "url": "classes/App-Form-Type-UserType.html#method_buildForm"
+        },                {
+            "fqsen": "\\App\\Form\\Type\\UserType\u003A\u003AconfigureOptions\u0028\u0029",
+            "name": "configureOptions",
+            "summary": "Configures\u0020the\u0020options\u0020for\u0020this\u0020type.",
+            "url": "classes/App-Form-Type-UserType.html#method_configureOptions"
+        },                {
+            "fqsen": "\\App\\Security\\Voter\\UserVoter",
+            "name": "UserVoter",
+            "summary": "Class\u0020UserVoter.",
+            "url": "classes/App-Security-Voter-UserVoter.html"
+        },                {
+            "fqsen": "\\App\\Security\\Voter\\UserVoter\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "OrderVoter\u0020constructor.",
+            "url": "classes/App-Security-Voter-UserVoter.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Security\\Voter\\UserVoter\u003A\u003Asupports\u0028\u0029",
+            "name": "supports",
+            "summary": "Determines\u0020if\u0020the\u0020attribute\u0020and\u0020subject\u0020are\u0020supported\u0020by\u0020this\u0020voter.",
+            "url": "classes/App-Security-Voter-UserVoter.html#method_supports"
+        },                {
+            "fqsen": "\\App\\Security\\Voter\\UserVoter\u003A\u003AvoteOnAttribute\u0028\u0029",
+            "name": "voteOnAttribute",
+            "summary": "Perform\u0020a\u0020single\u0020access\u0020check\u0020operation\u0020on\u0020a\u0020given\u0020attribute,\u0020subject\u0020and\u0020token.",
+            "url": "classes/App-Security-Voter-UserVoter.html#method_voteOnAttribute"
+        },                {
+            "fqsen": "\\App\\Security\\Voter\\UserVoter\u003A\u003A\u0024security",
+            "name": "security",
+            "summary": "Security\u0020helper.",
+            "url": "classes/App-Security-Voter-UserVoter.html#property_security"
+        },                {
+            "fqsen": "\\App\\Service\\UserService",
+            "name": "UserService",
+            "summary": "Class\u0020UserService.",
+            "url": "classes/App-Service-UserService.html"
+        },                {
+            "fqsen": "\\App\\Service\\UserService\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "Constructor.",
+            "url": "classes/App-Service-UserService.html#method___construct"
+        },                {
+            "fqsen": "\\App\\Service\\UserService\u003A\u003Asave\u0028\u0029",
+            "name": "save",
+            "summary": "Save\u0020entity.",
+            "url": "classes/App-Service-UserService.html#method_save"
+        },                {
+            "fqsen": "\\App\\Service\\UserService\u003A\u003A\u0024userRepository",
+            "name": "userRepository",
+            "summary": "User\u0020repository.",
+            "url": "classes/App-Service-UserService.html#property_userRepository"
+        },                {
+            "fqsen": "\\App\\Service\\UserServiceInterface",
+            "name": "UserServiceInterface",
+            "summary": "Interface\u0020UserServiceInterface.",
+            "url": "classes/App-Service-UserServiceInterface.html"
+        },                {
+            "fqsen": "\\App\\Service\\UserServiceInterface\u003A\u003Asave\u0028\u0029",
+            "name": "save",
+            "summary": "Save\u0020entity.",
+            "url": "classes/App-Service-UserServiceInterface.html#method_save"
+        },                {
             "fqsen": "\\",
             "name": "\\",
             "summary": "",
@@ -1245,6 +1350,11 @@ Search.appendIndex(
             "name": "Form",
             "summary": "",
             "url": "namespaces/app-form.html"
+        },                {
+            "fqsen": "\\App\\Form\\Type",
+            "name": "Type",
+            "summary": "",
+            "url": "namespaces/app-form-type.html"
         },                {
             "fqsen": "\\App",
             "name": "App",

@@ -42,6 +42,22 @@
         <source>action.back</source>
         <target>Back</target>
       </trans-unit>
+      <trans-unit id="label.password">
+        <source>label.password</source>
+        <target>Password</target>
+      </trans-unit>
+      <trans-unit id="label.repeat_password">
+        <source>label.repeat_password</source>
+        <target>Repeat password</target>
+      </trans-unit>
+      <trans-unit id="label.password_change">
+        <source>label.password_change</source>
+        <target>Change password</target>
+      </trans-unit>
+      <trans-unit id="title.user_edit">
+        <source>title.user_edit</source>
+        <target>Edit password</target>
+      </trans-unit>
       <trans-unit id="label.name">
         <source>label.name</source>
         <target>Name</target>
@@ -65,6 +81,10 @@
       <trans-unit id="message.created_successfully">
         <source>message.created_successfully</source>
         <target>Created new object.</target>
+      </trans-unit>
+      <trans-unit id="message.updated_successfully">
+        <source>message.updated_successfully</source>
+        <target>Updated successfully.</target>
       </trans-unit>
       <trans-unit id="message.deleted_successfully">
         <source>message.deleted_successfully</source>
