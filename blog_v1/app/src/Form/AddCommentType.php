@@ -25,9 +25,9 @@ class AddCommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->setMethod('GET');
-        $builder->add('autor', EmailType::class, ['label' => 'label.autor:']);
-        $builder->add('comment_text', TextareaType::class, ['label' => 'label.komentarz:', 'required' => true,
+        $builder->add('autor', EmailType::class, ['label' => 'label.author']);
+        $builder->add('comment_text', TextareaType::class, ['label' => 'label.comment_text', 'required' => true,
         'attr' => ['max_length' => 500], ]);
-        $builder->add('save', SubmitType::class, ['label' => 'label.zapisz']);
+        $builder->add('save', SubmitType::class, ['label' => 'action.save']);
     }
 }
