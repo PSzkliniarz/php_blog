@@ -57,7 +57,7 @@ class CommentControllerTest extends BaseTest
 
 
         $this->client->submitForm('Save', [
-            'comment[comment_text]' => 'Testing',
+            'comment[commentText]' => 'Testing',
             'comment[autor]' => $userEmail,
             'comment[post]' => $post->getId(),
         ]);
@@ -109,7 +109,7 @@ class CommentControllerTest extends BaseTest
         $result = $this->client->getResponse();
 
         $this->client->submitForm('Update', [
-            'comment[comment_text]' => 'Something New',
+            'comment[commentText]' => 'Something New',
             'comment[autor]' => 'New Author',
             'comment[post]' => $post->getId(),
         ]);

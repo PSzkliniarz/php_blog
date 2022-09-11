@@ -26,7 +26,7 @@ class AddCommentType extends AbstractType
     {
         $builder->setMethod('GET');
         $builder->add('autor', EmailType::class, ['label' => 'label.author']);
-        $builder->add('comment_text', TextareaType::class, ['label' => 'label.comment_text', 'required' => true,
+        $builder->add('commentText', TextareaType::class, ['label' => 'label.comment_text', 'required' => true,
         'attr' => ['max_length' => 500], ]);
         $builder->add('save', SubmitType::class, ['label' => 'action.save']);
     }

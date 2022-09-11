@@ -12,6 +12,7 @@ use App\Form\AddCommentType;
 use App\Form\PostType;
 use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
+use App\Service\CommentService;
 use App\Service\PostService;
 use App\Service\PostServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,14 +39,18 @@ class PostController extends AbstractController
      */
     private TranslatorInterface $translator;
 
+    private CommentService $commentService;
+
     /**
      * @param PostServiceInterface $postService
      * @param TranslatorInterface  $translator
+     * @param CommentService       $commentService Comment Service
      */
-    public function __construct(PostServiceInterface $postService, TranslatorInterface $translator)
+    public function __construct(PostServiceInterface $postService, TranslatorInterface $translator, CommentService $commentService)
     {
         $this->postService = $postService;
         $this->translator = $translator;
+        $this->commentService = $commentService;
     }
 
     /**
@@ -137,10 +142,9 @@ class PostController extends AbstractController
         $comment = new Comment();
         $form = $this->createForm(AddCommentType::class, $comment);
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $comment->setPost($post);
-            $em->persist($comment);
-            $em->flush();
+            $this->commentService->save($comment);
             $redirectUrl = $this->generateUrl('post_show', ['id' => $postId]);
 
             return $this->redirect($redirectUrl);

@@ -26,10 +26,10 @@ class CommentType extends AbstractType
     {
         $builder
             ->add(
-                'comment_text',
+                'commentText',
                 TextType::class,
                 [
-                    'label' => 'label.comment_text',
+                    'label' => 'label.$commentText',
                     'required' => true,
                     'attr' => ['max_length' => 255],
                 ]

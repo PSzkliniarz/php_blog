@@ -7,6 +7,7 @@ namespace App\Entity;
 
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Comment class
@@ -14,19 +15,33 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
 {
+    /**
+     * Primary key.
+     *
+     * @var int|null Id
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'text')]
-    private $comment_text;
+    /**
+     * Comment text.
+     *
+     * @var string|null CommentText
+     */
 
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 200)]
+    private ?string $commentText;
+
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 255)]
     #[ORM\Column(type: 'string', length: 255)]
-    private $autor;
+    private ?string $autor;
 
-    #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]    #[ORM\JoinColumn(nullable: false)]
     private Post $post;
 
     /**
@@ -42,17 +57,17 @@ class Comment
      */
     public function getCommentText(): ?string
     {
-        return $this->comment_text;
+        return $this->commentText;
     }
 
     /**
-     * @param string $comment_text
+     * @param string $commentText
      *
      * @return $this
      */
-    public function setCommentText(string $comment_text): self
+    public function setCommentText(string $commentText): self
     {
-        $this->comment_text = $comment_text;
+        $this->commentText = $commentText;
 
         return $this;
     }

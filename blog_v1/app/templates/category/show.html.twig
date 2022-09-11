@@ -28,12 +28,4 @@
         {{ include('category/_delete_form.html.twig') }}
     {% endif %}
 
-    <br>
-    <br>
-    {% for post in category.posts %}
-        <a href="{{ url('post_show', {id: post.id}) }}">
-            {{ post.title }}
-        </a><br>
-    {%  endfor %}
-
 {% endblock %}
