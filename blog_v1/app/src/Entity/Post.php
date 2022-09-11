@@ -1,23 +1,22 @@
 <?php
 /**
- * Post entity
+ * Post entity.
  */
 
 namespace App\Entity;
 
-use DateTimeImmutable;
 use App\Repository\PostRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Post class
+ * Post class.
  */
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Post
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -65,25 +64,17 @@ class Post
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private $comments;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
     /**
-     * @param string $title
-     *
      * @return $this
      */
     public function setTitle(string $title): self
@@ -93,17 +84,12 @@ class Post
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getContent(): ?string
     {
         return $this->content;
     }
 
     /**
-     * @param string $content
-     *
      * @return $this
      */
     public function setContent(string $content): self
@@ -121,17 +107,12 @@ class Post
         return $this->title;
     }
 
-    /**
-     * @return Category|null
-     */
     public function getCategory(): ?Category
     {
         return $this->category;
     }
 
     /**
-     * @param Category|null $category
-     *
      * @return $this
      */
     public function setCategory(?Category $category): self
@@ -181,17 +162,12 @@ class Post
         $this->updatedAt = $updatedAt;
     }
 
-    /**
-     * @return User|null
-     */
     public function getAuthor(): ?User
     {
         return $this->author;
     }
 
     /**
-     * @param User|null $author
-     *
      * @return $this
      */
     public function setAuthor(?User $author): self

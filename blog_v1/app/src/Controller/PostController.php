@@ -1,6 +1,6 @@
 <?php
 /**
- * Post controller
+ * Post controller.
  */
 
 namespace App\Controller;
@@ -41,11 +41,6 @@ class PostController extends AbstractController
 
     private CommentService $commentService;
 
-    /**
-     * @param PostServiceInterface $postService
-     * @param TranslatorInterface  $translator
-     * @param CommentService       $commentService Comment Service
-     */
     public function __construct(PostServiceInterface $postService, TranslatorInterface $translator, CommentService $commentService)
     {
         $this->postService = $postService;
@@ -95,12 +90,6 @@ class PostController extends AbstractController
         return $filters;
     }
 
-    /**
-     * @param Request        $request
-     * @param PostRepository $postRepository
-     *
-     * @return Response
-     */
     #[Route('/new', name: 'post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PostRepository $postRepository): Response
     {
@@ -127,14 +116,6 @@ class PostController extends AbstractController
         ]);
     }
 
-    /**
-     * @param Request                $request
-     * @param Post                   $post
-     * @param CommentRepository      $commentRepository
-     * @param EntityManagerInterface $em
-     *
-     * @return Response
-     */
     #[Route('/{id}', name: 'post_show', methods: ['GET'])]
     public function show(Request $request, Post $post, CommentRepository $commentRepository, EntityManagerInterface $em): Response
     {
@@ -160,12 +141,6 @@ class PostController extends AbstractController
 
     /**
      * @param $id
-     * @param Request                $request
-     * @param PostRepository         $postRepository
-     * @param EntityManagerInterface $em
-     * @param Post                   $post
-     *
-     * @return Response
      */
     #[Route('/{id}/edit', name: 'post_edit', methods: ['GET', 'POST'])]
     #[IsGranted('EDIT', subject: 'post')]

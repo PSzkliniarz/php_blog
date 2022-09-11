@@ -6,7 +6,6 @@ use App\Entity\Category;
 use App\Entity\Enum\UserRole;
 use App\Tests\BaseTest;
 
-
 class CategoryControllerTest extends BaseTest
 {
     /**
@@ -68,12 +67,12 @@ class CategoryControllerTest extends BaseTest
      */
     public function testNew(): void
     {
-        $user= $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'category_new_admin@example.com');
+        $user = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'category_new_admin@example.com');
         $this->httpClient->loginUser($user);
 
         $originalNumObjectsInRepository = count($this->repository->findAll());
 
-        $this->httpClient->request('GET', self::TEST_ROUTE . '/create');
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/create');
         $result = $this->httpClient->getResponse();
 
         $this->assertEquals(200, $result->getStatusCode());
@@ -90,17 +89,18 @@ class CategoryControllerTest extends BaseTest
      */
     public function testShow(): void
     {
-        $user= $this->createUser([UserRole::ROLE_USER->value], 'category_show_user@example.com');
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'category_show_user@example.com');
         $this->httpClient->loginUser($user);
         $fixture = new Category();
         $fixture->setName('My Title');
 
         $this->repository->save($fixture);
 
-        $this->httpClient->request('GET', self::TEST_ROUTE . '/' . $fixture->getId());
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$fixture->getId());
 
         $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
 
         $this->assertEquals(200, $resultStatusCode);
+        $this->assertEquals('My Title', $fixture);
     }
 }

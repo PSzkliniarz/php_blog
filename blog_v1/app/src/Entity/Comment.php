@@ -1,6 +1,6 @@
 <?php
 /**
- * Comment entity
+ * Comment entity.
  */
 
 namespace App\Entity;
@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Comment class
+ * Comment class.
  */
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
@@ -30,7 +30,6 @@ class Comment
      *
      * @var string|null CommentText
      */
-
     #[ORM\Column(type: 'string')]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 200)]
@@ -41,28 +40,20 @@ class Comment
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $autor;
 
-    #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')] #[ORM\JoinColumn(nullable: false)]
     private Post $post;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCommentText(): ?string
     {
         return $this->commentText;
     }
 
     /**
-     * @param string $commentText
-     *
      * @return $this
      */
     public function setCommentText(string $commentText): self
@@ -72,17 +63,12 @@ class Comment
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getAutor(): ?string
     {
         return $this->autor;
     }
 
     /**
-     * @param string $autor
-     *
      * @return $this
      */
     public function setAutor(string $autor): self
@@ -92,17 +78,12 @@ class Comment
         return $this;
     }
 
-    /**
-     * @return Post|null
-     */
     public function getPost(): ?Post
     {
         return $this->post;
     }
 
     /**
-     * @param Post|null $post
-     *
      * @return $this
      */
     public function setPost(?Post $post): self

@@ -31,18 +31,11 @@ class PostService implements PostServiceInterface
      */
     private CategoryRepository $categoryRepository;
 
-
     /**
      * Category Service.
      */
     private CategoryService $categoryService;
 
-    /**
-     * Constructor.
-     *
-     * @param PostRepository     $postRepository Post repository
-     * @param PaginatorInterface $paginator      Paginator
-     */
     public function __construct(PostRepository $postRepository, PaginatorInterface $paginator, CategoryRepository $categoryRepository, CategoryService $categoryService)
     {
         $this->postRepository = $postRepository;
@@ -54,12 +47,12 @@ class PostService implements PostServiceInterface
     /**
      * Get paginated list.
      *
-     * @param int $page Page number
+     * @param int   $page    Page number
      * @param array $filters Filters
      *
      * @return PaginationInterface<string, mixed> Paginated list
      */
-    public function getPaginatedList(int $page, array $filters = [] ): PaginationInterface
+    public function getPaginatedList(int $page, array $filters = []): PaginationInterface
     {
         $filters = $this->prepareFilters($filters);
 
@@ -100,11 +93,11 @@ class PostService implements PostServiceInterface
      *
      * @param array $filters Filters
      *
+     * @return arra
      */
     public function prepareFilters(array $filters): array
     {
         $resultFilters = [];
-
 
         if (!empty($filters['category_id'])) {
             $category = $this->categoryService->findOneById($filters['category_id']);
@@ -115,5 +108,4 @@ class PostService implements PostServiceInterface
 
         return $resultFilters;
     }
-
 }

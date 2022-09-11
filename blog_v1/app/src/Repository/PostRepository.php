@@ -1,6 +1,6 @@
 <?php
 /**
- * Post repository
+ * Post repository.
  */
 
 namespace App\Repository;
@@ -32,20 +32,11 @@ class PostRepository extends ServiceEntityRepository
      */
     public const PAGINATOR_ITEMS_PER_PAGE = 4;
 
-    /**
-     * @param ManagerRegistry $registry
-     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Post::class);
     }
 
-    /**
-     * @param Post $entity
-     * @param bool $flush
-     *
-     * @return void
-     */
     public function add(Post $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -55,12 +46,6 @@ class PostRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @param Post $entity
-     * @param bool $flush
-     *
-     * @return void
-     */
     public function remove(Post $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -69,28 +54,6 @@ class PostRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-//
-//    /**
-//     * Query all records.
-//     *
-//     * @param array $filters Filters array
-//     *
-//     * @return QueryBuilder Query builder
-//     */
-//    public function queryAll(array $filters = []): QueryBuilder
-//    {
-//        $queryBuilder = $this->getOrCreateQueryBuilder()
-//            ->select(
-//                'partial book.{id, author, title}',
-//                'partial category.{id, title}',
-//                'partial tags.{id, title}'
-//            )
-//            ->join('book.category', 'category')
-//            ->leftJoin('book.tags', 'tags')
-//            ->orderBy('book.title', 'ASC');
-//
-//        return $this->applyFiltersToList($queryBuilder, $filters);
-//    }
 
     /**
      * Query all records.
@@ -102,7 +65,7 @@ class PostRepository extends ServiceEntityRepository
     public function queryAll(array $filters = []): QueryBuilder
     {
         $queryBuilder = $this->getOrCreateQueryBuilder()
-            ->select('post', 'partial category.{id, name}',)
+            ->select('post', 'partial category.{id, name}')
             ->join('post.category', 'category')
             ->orderBy('post.createdAt', 'DESC');
 

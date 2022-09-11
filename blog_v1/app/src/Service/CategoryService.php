@@ -73,7 +73,6 @@ class CategoryService implements CategoryServiceInterface
         $this->categoryRepository->delete($category);
     }
 
-
     /**
      * Find one by id.
      *

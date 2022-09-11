@@ -1,6 +1,6 @@
 <?php
 /**
- * Category entity
+ * Category entity.
  */
 
 namespace App\Entity;
@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Category class
+ * Category class.
  */
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -27,25 +27,17 @@ class Category
     #[Assert\Length(min: 3, max: 64)]
     private $name;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string|null
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * @param string $name
-     *
      * @return $this
      */
     public function setName(string $name): self
@@ -62,5 +54,4 @@ class Category
     {
         return $this->name;
     }
-
 }

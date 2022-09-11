@@ -1,6 +1,6 @@
 <?php
 /**
- * Timestample
+ * Timestample.
  */
 
 namespace App\Entity\Traits;
@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * TimestampleTrait
+ * TimestampleTrait.
  */
 trait TimestampableTrait
 {
@@ -28,7 +28,7 @@ trait TimestampableTrait
     protected $updatedAt;
 
     /**
-     * Construct
+     * Construct.
      */
     public function __construct()
     {

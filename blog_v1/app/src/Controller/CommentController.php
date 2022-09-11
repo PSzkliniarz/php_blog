@@ -1,6 +1,6 @@
 <?php
 /**
- * Comment controller
+ * Comment controller.
  */
 
 namespace App\Controller;
@@ -45,11 +45,6 @@ class CommentController extends AbstractController
         $this->translator = $translator;
     }
 
-    /**
-     * @param CommentRepository $commentRepository
-     *
-     * @return Response
-     */
     #[Route('/', name: 'comment_index', methods: ['GET'])]
     public function index(CommentRepository $commentRepository): Response
     {
@@ -58,12 +53,6 @@ class CommentController extends AbstractController
         ]);
     }
 
-    /**
-     * @param Request           $request
-     * @param CommentRepository $commentRepository
-     *
-     * @return Response
-     */
     #[Route('/new', name: 'comment_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CommentRepository $commentRepository): Response
     {
@@ -104,13 +93,6 @@ class CommentController extends AbstractController
         ]);
     }
 
-    /**
-     * @param Request           $request
-     * @param Comment           $comment
-     * @param CommentRepository $commentRepository
-     *
-     * @return Response
-     */
     #[IsGranted('EDIT', subject: 'comment')]
     #[Route('/{id}/edit', name: 'comment_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Comment $comment, CommentRepository $commentRepository): Response
@@ -135,12 +117,6 @@ class CommentController extends AbstractController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param Comment $comment
-     *
-     * @return Response
-     */
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/delete', name: 'comment_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]
     public function delete(Request $request, Comment $comment): Response
