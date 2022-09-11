@@ -35,4 +35,13 @@ interface PostServiceInterface
      * @param Post $post Post entity
      */
     public function delete(Post $post): void;
+
+    /**
+     * Prepare filters.
+     *
+     * @param array $filters Filters
+     *
+     * @return array Filters
+     */
+    public function prepareFilters(array $filters): array;
 }

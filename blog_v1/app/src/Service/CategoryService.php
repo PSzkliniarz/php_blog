@@ -72,4 +72,17 @@ class CategoryService implements CategoryServiceInterface
     {
         $this->categoryRepository->delete($category);
     }
+
+
+    /**
+     * Find one by id.
+     *
+     * @param int $id Id
+     *
+     * @return Category|null Category
+     */
+    public function findOneById(int $id): ?Category
+    {
+        return $this->categoryRepository->findOneById($id);
+    }
 }

@@ -61,14 +61,33 @@ class PostController extends AbstractController
     )]
     public function index(Request $request): Response
     {
+        $filters = $this->getFilters($request);
         $pagination = $this->postService->getPaginatedList(
-            $request->query->getInt('page', 1)
+            $request->query->getInt('page', 1),
+            $filters
         );
 
         return $this->render(
             'post/index.html.twig',
             ['pagination' => $pagination]
         );
+    }
+
+    /**
+     * Function get filters.
+     *
+     * @param Request $request HTTP Request
+     *
+     * @return int[]
+     *
+     * @psalm-return array{tag_id: int}
+     */
+    public function getFilters(Request $request): array
+    {
+        $filters = [];
+        $filters['category_id'] = $request->query->getInt('filters_category_id');
+
+        return $filters;
     }
 
     /**
