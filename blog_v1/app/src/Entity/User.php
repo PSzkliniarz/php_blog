@@ -81,11 +81,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->email = $email;
     }
 
+    /**
+     * Get User Identifier
+     *
+     * @return string
+     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
+    /**
+     * Get User Name
+     *
+     * @return string
+     */
     public function getUsername(): string
     {
         return (string) $this->email;
@@ -139,6 +149,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
     }
 
+    /**
+     * Get Salt
+     *
+     * @return string|null
+     */
     public function getSalt(): ?string
     {
         return null;

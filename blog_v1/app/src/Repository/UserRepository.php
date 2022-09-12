@@ -22,11 +22,24 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository
 {
+    /**
+     * User Constructor
+     *
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
     }
 
+    /**
+     * Add User
+     *
+     * @param User $entity
+     * @param bool $flush
+     *
+     * @return void
+     */
     public function add(User $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -36,6 +49,14 @@ class UserRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Remove User
+     *
+     * @param User $entity
+     * @param bool $flush
+     *
+     * @return void
+     */
     public function remove(User $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);

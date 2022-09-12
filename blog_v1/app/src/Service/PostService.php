@@ -36,6 +36,14 @@ class PostService implements PostServiceInterface
      */
     private CategoryService $categoryService;
 
+    /**
+     * Post Constructor
+     *
+     * @param PostRepository     $postRepository
+     * @param PaginatorInterface $paginator
+     * @param CategoryRepository $categoryRepository
+     * @param CategoryService    $categoryService
+     */
     public function __construct(PostRepository $postRepository, PaginatorInterface $paginator, CategoryRepository $categoryRepository, CategoryService $categoryService)
     {
         $this->postRepository = $postRepository;

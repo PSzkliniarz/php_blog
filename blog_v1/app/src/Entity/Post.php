@@ -64,17 +64,31 @@ class Post
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private $comments;
 
+    /**
+     * Get Id
+     *
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Get Title
+     *
+     * @return string|null
+     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
     /**
+     * Set Title
+     *
+     * @param string $title
+     *
      * @return $this
      */
     public function setTitle(string $title): self
@@ -84,12 +98,21 @@ class Post
         return $this;
     }
 
+    /**
+     * Get Content
+     *
+     * @return string|null
+     */
     public function getContent(): ?string
     {
         return $this->content;
     }
 
     /**
+     * Set Content
+     *
+     * @param string $content
+     *
      * @return $this
      */
     public function setContent(string $content): self
@@ -107,12 +130,21 @@ class Post
         return $this->title;
     }
 
+    /**
+     * Get Category
+     *
+     * @return Category|null
+     */
     public function getCategory(): ?Category
     {
         return $this->category;
     }
 
     /**
+     * Set Category
+     *
+     * @param Category|null $category
+     *
      * @return $this
      */
     public function setCategory(?Category $category): self
@@ -153,21 +185,32 @@ class Post
     }
 
     /**
-     * Setter for updated at.
+     * Set Updated At
      *
-     * @param DateTimeImmutable|null $updatedAt Updated at
+     * @param DateTimeImmutable|null $updatedAt
+     *
+     * @return void
      */
     public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
 
+    /**
+     * Get Author
+     *
+     * @return User|null
+     */
     public function getAuthor(): ?User
     {
         return $this->author;
     }
 
     /**
+     * Set Author
+     *
+     * @param User|null $author
+     *
      * @return $this
      */
     public function setAuthor(?User $author): self

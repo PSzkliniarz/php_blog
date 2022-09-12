@@ -39,6 +39,14 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
+    /**
+     * Add Category
+     *
+     * @param Category $entity
+     * @param bool     $flush
+     *
+     * @return void
+     */
     public function add(Category $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -48,6 +56,14 @@ class CategoryRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Remove Category
+     *
+     * @param Category $entity
+     * @param bool     $flush
+     *
+     * @return void
+     */
     public function remove(Category $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);

@@ -32,11 +32,24 @@ class PostRepository extends ServiceEntityRepository
      */
     public const PAGINATOR_ITEMS_PER_PAGE = 4;
 
+    /**
+     * Post Constructor
+     *
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Post::class);
     }
 
+    /**
+     * Add Post
+     *
+     * @param Post $entity
+     * @param bool $flush
+     *
+     * @return void
+     */
     public function add(Post $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -46,6 +59,14 @@ class PostRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Remove Post
+     *
+     * @param Post $entity
+     * @param bool $flush
+     *
+     * @return void
+     */
     public function remove(Post $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);

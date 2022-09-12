@@ -16,6 +16,14 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class AddCommentType extends AbstractType
 {
+    /**
+     * Build Form
+     *
+     * @param FormBuilderInterface $builder
+     * @param array                $options
+     *
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->setMethod('GET');

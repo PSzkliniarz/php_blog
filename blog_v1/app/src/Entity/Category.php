@@ -27,17 +27,31 @@ class Category
     #[Assert\Length(min: 3, max: 64)]
     private $name;
 
+    /**
+     * Get Id
+     *
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Get Name
+     *
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
+     * Set Name
+     *
+     * @param string $name
+     *
      * @return $this
      */
     public function setName(string $name): self

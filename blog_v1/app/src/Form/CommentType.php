@@ -16,6 +16,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class CommentType extends AbstractType
 {
+    /**
+     * Comment build form
+     *
+     * @param FormBuilderInterface $builder
+     * @param array                $options
+     *
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -33,6 +41,13 @@ class CommentType extends AbstractType
         ;
     }
 
+    /**
+     * Configure Options
+     *
+     * @param OptionsResolver $resolver
+     *
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -40,6 +55,11 @@ class CommentType extends AbstractType
         ]);
     }
 
+    /**
+     * Get Block Prefix
+     *
+     * @return string
+     */
     public function getBlockPrefix(): string
     {
         return 'comment';
