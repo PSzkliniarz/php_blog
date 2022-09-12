@@ -47,7 +47,7 @@ class CommentFixtures extends AbstractBaseFixtures implements DependentFixtureIn
      *
      * @return string[] of dependencies
      *
-     * @psalm-return array{0: CategoryFixtures::class}
+     * @psalm-return array{0: PostFixtures::class}
      */
     public function getDependencies(): array
     {

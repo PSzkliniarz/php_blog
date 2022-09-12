@@ -1,34 +1,37 @@
 <?php
 /**
- * Post entity
+ * Post entity.
  */
 
 namespace App\Entity;
 
-use DateTimeImmutable;
 use App\Repository\PostRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Post class
+ * Post class.
  */
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Post
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 255)]
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
+    #[Assert\NotBlank]
     #[ORM\Column(type: 'text')]
     private $content;
 
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'posts')]
+    #[ORM\ManyToOne(targetEntity: Category::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $category;
 
@@ -62,6 +65,8 @@ class Post
     private $comments;
 
     /**
+     * Get Id
+     *
      * @return int|null
      */
     public function getId(): ?int
@@ -70,6 +75,8 @@ class Post
     }
 
     /**
+     * Get Title
+     *
      * @return string|null
      */
     public function getTitle(): ?string
@@ -78,6 +85,8 @@ class Post
     }
 
     /**
+     * Set Title
+     *
      * @param string $title
      *
      * @return $this
@@ -90,6 +99,8 @@ class Post
     }
 
     /**
+     * Get Content
+     *
      * @return string|null
      */
     public function getContent(): ?string
@@ -98,6 +109,8 @@ class Post
     }
 
     /**
+     * Set Content
+     *
      * @param string $content
      *
      * @return $this
@@ -118,6 +131,8 @@ class Post
     }
 
     /**
+     * Get Category
+     *
      * @return Category|null
      */
     public function getCategory(): ?Category
@@ -126,6 +141,8 @@ class Post
     }
 
     /**
+     * Set Category
+     *
      * @param Category|null $category
      *
      * @return $this
@@ -168,9 +185,11 @@ class Post
     }
 
     /**
-     * Setter for updated at.
+     * Set Updated At
      *
-     * @param DateTimeImmutable|null $updatedAt Updated at
+     * @param DateTimeImmutable|null $updatedAt
+     *
+     * @return void
      */
     public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
     {
@@ -178,6 +197,8 @@ class Post
     }
 
     /**
+     * Get Author
+     *
      * @return User|null
      */
     public function getAuthor(): ?User
@@ -186,6 +207,8 @@ class Post
     }
 
     /**
+     * Set Author
+     *
      * @param User|null $author
      *
      * @return $this

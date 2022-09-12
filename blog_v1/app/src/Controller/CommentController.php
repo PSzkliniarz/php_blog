@@ -1,6 +1,6 @@
 <?php
 /**
- * Comment controller
+ * Comment controller.
  */
 
 namespace App\Controller;
@@ -46,6 +46,8 @@ class CommentController extends AbstractController
     }
 
     /**
+     * List of comments
+     *
      * @param CommentRepository $commentRepository
      *
      * @return Response
@@ -59,6 +61,8 @@ class CommentController extends AbstractController
     }
 
     /**
+     * Create Comment
+     *
      * @param Request           $request
      * @param CommentRepository $commentRepository
      *
@@ -105,6 +109,8 @@ class CommentController extends AbstractController
     }
 
     /**
+     * Edit Comment
+     *
      * @param Request           $request
      * @param Comment           $comment
      * @param CommentRepository $commentRepository
@@ -136,6 +142,8 @@ class CommentController extends AbstractController
     }
 
     /**
+     * Delete comment
+     *
      * @param Request $request
      * @param Comment $comment
      *

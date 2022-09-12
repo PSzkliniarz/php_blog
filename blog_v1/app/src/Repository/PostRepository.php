@@ -1,10 +1,11 @@
 <?php
 /**
- * Post repository
+ * Post repository.
  */
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -32,6 +33,8 @@ class PostRepository extends ServiceEntityRepository
     public const PAGINATOR_ITEMS_PER_PAGE = 4;
 
     /**
+     * Post Constructor
+     *
      * @param ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)
@@ -40,6 +43,8 @@ class PostRepository extends ServiceEntityRepository
     }
 
     /**
+     * Add Post
+     *
      * @param Post $entity
      * @param bool $flush
      *
@@ -55,6 +60,8 @@ class PostRepository extends ServiceEntityRepository
     }
 
     /**
+     * Remove Post
+     *
      * @param Post $entity
      * @param bool $flush
      *
@@ -72,14 +79,36 @@ class PostRepository extends ServiceEntityRepository
     /**
      * Query all records.
      *
+     * @param array $filters Filters array
+     *
      * @return QueryBuilder Query builder
      */
-    public function queryAll(): QueryBuilder
+    public function queryAll(array $filters = []): QueryBuilder
     {
-        return $this->getOrCreateQueryBuilder()
-            ->select('post', 'category')
+        $queryBuilder = $this->getOrCreateQueryBuilder()
+            ->select('post', 'partial category.{id, name}')
             ->join('post.category', 'category')
             ->orderBy('post.createdAt', 'DESC');
+
+        return $this->applyFiltersToList($queryBuilder, $filters);
+    }
+
+    /**
+     * Apply filters function.
+     *
+     * @param QueryBuilder $queryBuilder Query builder
+     * @param array        $filters      Filters array
+     *
+     * @return QueryBuilder Query builder
+     */
+    public function applyFiltersToList(QueryBuilder $queryBuilder, array $filters = []): QueryBuilder
+    {
+        if (isset($filters['category']) && $filters['category'] instanceof Category) {
+            $queryBuilder->andWhere('category IN (:category)')
+                ->setParameter('category', $filters['category']);
+        }
+
+        return $queryBuilder;
     }
 
     /**

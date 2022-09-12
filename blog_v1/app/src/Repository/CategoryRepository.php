@@ -40,6 +40,8 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
+     * Add Category
+     *
      * @param Category $entity
      * @param bool     $flush
      *
@@ -55,6 +57,8 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
+     * Remove Category
+     *
      * @param Category $entity
      * @param bool     $flush
      *
@@ -77,6 +81,9 @@ class CategoryRepository extends ServiceEntityRepository
     public function queryAll(): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder()
+            ->select(
+                'partial category.{id, name, createdAt, updatedAt}',
+            )
             ->orderBy('category.name', 'ASC');
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Comment repository
+ * Comment repository.
  */
 
 namespace App\Repository;
@@ -20,6 +20,8 @@ use Doctrine\Persistence\ManagerRegistry;
 class CommentRepository extends ServiceEntityRepository
 {
     /**
+     * Comment Constructor
+     *
      * @param ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)
@@ -28,6 +30,8 @@ class CommentRepository extends ServiceEntityRepository
     }
 
     /**
+     * Add Comment
+     *
      * @param Comment $entity
      * @param bool    $flush
      *
@@ -43,6 +47,8 @@ class CommentRepository extends ServiceEntityRepository
     }
 
     /**
+     * Remove Comment
+     *
      * @param Comment $entity
      * @param bool    $flush
      *

@@ -67,9 +67,9 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
      * You may throw any AuthenticationException in this method in case of error (e.g.
      * a UserNotFoundException when the user cannot be found).
      *
-     * @return Passport Passport
-     *
      * @param Request $request Request
+     *
+     * @return Passport Passport
      *
      * @throws AuthenticationException
      */

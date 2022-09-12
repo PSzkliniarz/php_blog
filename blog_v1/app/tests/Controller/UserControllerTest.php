@@ -4,6 +4,7 @@
  */
 
 namespace App\Tests\Controller;
+
 use App\Entity\Enum\UserRole;
 use App\Entity\User;
 use App\Tests\BaseTest;
@@ -21,6 +22,9 @@ class UserControllerTest extends BaseTest
      */
     public const TEST_ROUTE = '/user';
 
+    /**
+     * @var UserRepository
+     */
     private UserRepository $repository;
 
     /**
@@ -78,7 +82,7 @@ class UserControllerTest extends BaseTest
 
         // when
         $this->httpClient->followRedirects(true);
-        $this->httpClient->request('GET', "/user/" .strval($user->getId()). "/password_edit");
+        $this->httpClient->request('GET', "/user/".strval($user->getId())."/password_edit");
         $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
 
         // then
@@ -98,7 +102,7 @@ class UserControllerTest extends BaseTest
 
         // when
         $this->httpClient->followRedirects(true);
-        $this->httpClient->request('GET', "/user/" . strval($adminUser->getId())  . "/password_edit");
+        $this->httpClient->request('GET', "/user/".strval($adminUser->getId())."/password_edit");
         $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
 
         // then

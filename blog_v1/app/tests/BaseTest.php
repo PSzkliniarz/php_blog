@@ -63,7 +63,7 @@ abstract class BaseTest extends WebTestCase
         $firewallContext = 'main';
 
         $token = new UsernamePasswordToken($user, null, $firewallName, $user->getRoles());
-        $session->set('_security_' . $firewallContext, serialize($token));
+        $session->set('_security_'.$firewallContext, serialize($token));
         $session->save();
 
         $cookie = new Cookie($session->getName(), $session->getId());
@@ -79,10 +79,9 @@ abstract class BaseTest extends WebTestCase
         $entity = $userRepository->findOneBy(array('email' => 'test2@example.com'));
 
 
-        if ($entity !== null){
+        if ($entity !== null) {
             $userRepository->remove($entity);
         }
-
     }
 
     /**
@@ -132,6 +131,5 @@ abstract class BaseTest extends WebTestCase
         $commentRepository->add($comment, true);
 
         return $comment;
-
     }
 }

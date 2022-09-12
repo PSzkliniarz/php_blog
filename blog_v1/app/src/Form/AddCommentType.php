@@ -12,11 +12,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * AddCommentType class
+ * AddCommentType class.
  */
 class AddCommentType extends AbstractType
 {
     /**
+     * Build Form
+     *
      * @param FormBuilderInterface $builder
      * @param array                $options
      *
@@ -25,8 +27,8 @@ class AddCommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->setMethod('GET');
-        $builder->add('autor', EmailType::class, ['label' => 'label.author']);
-        $builder->add('comment_text', TextareaType::class, ['label' => 'label.comment_text', 'required' => true,
+        $builder->add('autor', EmailType::class, ['label' => 'label.author', 'required' => true]);
+        $builder->add('commentText', TextareaType::class, ['label' => 'label.comment_text', 'required' => true,
         'attr' => ['max_length' => 500], ]);
         $builder->add('save', SubmitType::class, ['label' => 'action.save']);
     }

@@ -1,35 +1,62 @@
 <?php
 /**
- * Comment entity
+ * Comment entity.
  */
 
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Comment class
+ * Comment class.
  */
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
 {
+    /**
+     * Primary key.
+     *
+     * @var int|null Id
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'text')]
-    private $comment_text;
+    /**
+     * Comment text.
+     *
+     * @var string|null CommentText
+     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 200)]
+    private ?string $commentText;
 
+    /**
+     * Comment Author
+     *
+     * @var string|null
+     */
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 255)]
     #[ORM\Column(type: 'string', length: 255)]
-    private $autor;
+    #[Assert\Email]
+    private ?string $autor;
 
-    #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: false)]
+    /**
+     * Comment Post
+     *
+     * @var Post
+     */
+    #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')] #[ORM\JoinColumn(nullable: false)]
     private Post $post;
 
     /**
+     * Get id
+     *
      * @return int|null
      */
     public function getId(): ?int
@@ -38,26 +65,32 @@ class Comment
     }
 
     /**
+     * Get Comment text
+     *
      * @return string|null
      */
     public function getCommentText(): ?string
     {
-        return $this->comment_text;
+        return $this->commentText;
     }
 
     /**
-     * @param string $comment_text
+     * Set Comment Text
+     *
+     * @param string $commentText
      *
      * @return $this
      */
-    public function setCommentText(string $comment_text): self
+    public function setCommentText(string $commentText): self
     {
-        $this->comment_text = $comment_text;
+        $this->commentText = $commentText;
 
         return $this;
     }
 
     /**
+     * Get Author
+     *
      * @return string|null
      */
     public function getAutor(): ?string
@@ -66,6 +99,8 @@ class Comment
     }
 
     /**
+     * Set Author
+     *
      * @param string $autor
      *
      * @return $this
@@ -78,6 +113,8 @@ class Comment
     }
 
     /**
+     * Get Post
+     *
      * @return Post|null
      */
     public function getPost(): ?Post
@@ -86,6 +123,8 @@ class Comment
     }
 
     /**
+     * Set Post
+     *
      * @param Post|null $post
      *
      * @return $this

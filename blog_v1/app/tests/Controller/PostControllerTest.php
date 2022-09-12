@@ -52,12 +52,12 @@ class PostControllerTest extends BaseTest
     public function testNew(): void
     {
 
-        $user= $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'post_new_admin@example.com');
+        $user = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'post_new_admin@example.com');
         $this->httpClient->loginUser($user);
 
         $category = $this->createCategory();
 
-        $this->httpClient->request('GET', self::TEST_ROUTE . '/new');;
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/new');
 
         $this->httpClient->submitForm('Save', [
             'post[title]' => 'Testing',
@@ -75,11 +75,13 @@ class PostControllerTest extends BaseTest
         $category = $this->createCategory();
         $fixture = $this->createPost($user, $category);
 
-        $this->httpClient->request('GET', self::TEST_ROUTE . '/' . $fixture->getId());
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$fixture->getId());
 
         $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
 
         $this->assertEquals(200, $resultStatusCode);
         $this->assertEquals('post_show_admin@example.com', $fixture->getAuthor()->getEmail());
+        $this->assertEquals('post_show_admin@example.com', $fixture->getAuthor()->getUsername());
+        $this->assertGreaterThanOrEqual($fixture->getUpdatedAt(),$fixture->getCreatedAt());
     }
 }

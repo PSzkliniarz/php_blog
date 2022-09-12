@@ -12,11 +12,13 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * CommentType class
+ * CommentType class.
  */
 class CommentType extends AbstractType
 {
     /**
+     * Comment build form
+     *
      * @param FormBuilderInterface $builder
      * @param array                $options
      *
@@ -26,10 +28,10 @@ class CommentType extends AbstractType
     {
         $builder
             ->add(
-                'comment_text',
+                'commentText',
                 TextType::class,
                 [
-                    'label' => 'label.comment_text',
+                    'label' => 'label.$commentText',
                     'required' => true,
                     'attr' => ['max_length' => 255],
                 ]
@@ -40,6 +42,8 @@ class CommentType extends AbstractType
     }
 
     /**
+     * Configure Options
+     *
      * @param OptionsResolver $resolver
      *
      * @return void
@@ -52,6 +56,8 @@ class CommentType extends AbstractType
     }
 
     /**
+     * Get Block Prefix
+     *
      * @return string
      */
     public function getBlockPrefix(): string

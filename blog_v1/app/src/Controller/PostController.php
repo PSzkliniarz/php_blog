@@ -1,6 +1,6 @@
 <?php
 /**
- * Post controller
+ * Post controller.
  */
 
 namespace App\Controller;
@@ -12,6 +12,7 @@ use App\Form\AddCommentType;
 use App\Form\PostType;
 use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
+use App\Service\CommentService;
 use App\Service\PostService;
 use App\Service\PostServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,14 +39,20 @@ class PostController extends AbstractController
      */
     private TranslatorInterface $translator;
 
+    private CommentService $commentService;
+
     /**
+     * Post Constructor
+     *
      * @param PostServiceInterface $postService
      * @param TranslatorInterface  $translator
+     * @param CommentService       $commentService
      */
-    public function __construct(PostServiceInterface $postService, TranslatorInterface $translator)
+    public function __construct(PostServiceInterface $postService, TranslatorInterface $translator, CommentService $commentService)
     {
         $this->postService = $postService;
         $this->translator = $translator;
+        $this->commentService = $commentService;
     }
 
     /**
@@ -61,8 +68,10 @@ class PostController extends AbstractController
     )]
     public function index(Request $request): Response
     {
+        $filters = $this->getFilters($request);
         $pagination = $this->postService->getPaginatedList(
-            $request->query->getInt('page', 1)
+            $request->query->getInt('page', 1),
+            $filters
         );
 
         return $this->render(
@@ -72,6 +81,25 @@ class PostController extends AbstractController
     }
 
     /**
+     * Function get filters.
+     *
+     * @param Request $request HTTP Request
+     *
+     * @return int[]
+     *
+     * @psalm-return array{tag_id: int}
+     */
+    public function getFilters(Request $request): array
+    {
+        $filters = [];
+        $filters['category_id'] = $request->query->getInt('filters_category_id');
+
+        return $filters;
+    }
+
+    /**
+     * Create Post Action
+     *
      * @param Request        $request
      * @param PostRepository $postRepository
      *
@@ -104,6 +132,8 @@ class PostController extends AbstractController
     }
 
     /**
+     * Show Post Action
+     *
      * @param Request                $request
      * @param Post                   $post
      * @param CommentRepository      $commentRepository
@@ -118,10 +148,9 @@ class PostController extends AbstractController
         $comment = new Comment();
         $form = $this->createForm(AddCommentType::class, $comment);
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $comment->setPost($post);
-            $em->persist($comment);
-            $em->flush();
+            $this->commentService->save($comment);
             $redirectUrl = $this->generateUrl('post_show', ['id' => $postId]);
 
             return $this->redirect($redirectUrl);
@@ -136,6 +165,8 @@ class PostController extends AbstractController
     }
 
     /**
+     * Edit Post Action
+     *
      * @param $id
      * @param Request                $request
      * @param PostRepository         $postRepository

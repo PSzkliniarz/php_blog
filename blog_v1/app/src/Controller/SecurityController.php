@@ -1,6 +1,6 @@
 <?php
 /**
- * Security controller
+ * Security controller.
  */
 
 namespace App\Controller;
@@ -16,6 +16,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     /**
+     * Login
+     *
      * @param AuthenticationUtils $authenticationUtils
      *
      * @return Response
@@ -34,6 +36,8 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * Logout
+     *
      * @return void
      */
     #[Route(path: '/logout', name: 'app_logout')]

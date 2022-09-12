@@ -43,7 +43,7 @@ class CommentServiceTest extends BaseTest
         $commentRepository =
             static::getContainer()->get(CommentRepository::class);
 
-        $user= $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'post_admin@example.com');
+        $user = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'post_admin@example.com');
         $category = $this->createCategory();
         $post = $this->createPost($user, $category);
         $commentToDelete = $this->createComment($post);

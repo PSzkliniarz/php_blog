@@ -82,6 +82,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Get User Identifier
+     *
      * @return string
      */
     public function getUserIdentifier(): string
@@ -90,6 +92,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Get User Name
+     *
      * @return string
      */
     public function getUsername(): string
@@ -146,6 +150,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Get Salt
+     *
      * @return string|null
      */
     public function getSalt(): ?string

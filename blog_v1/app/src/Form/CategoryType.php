@@ -12,11 +12,13 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * CategoryType class
+ * CategoryType class.
  */
 class CategoryType extends AbstractType
 {
     /**
+     * Category build form
+     *
      * @param FormBuilderInterface $builder
      * @param array                $options
      *
@@ -36,6 +38,8 @@ class CategoryType extends AbstractType
     }
 
     /**
+     * Configure Options
+     *
      * @param OptionsResolver $resolver
      *
      * @return void
@@ -48,6 +52,8 @@ class CategoryType extends AbstractType
     }
 
     /**
+     * Get Block Prefix
+     *
      * @return string
      */
     public function getBlockPrefix(): string

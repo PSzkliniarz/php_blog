@@ -1,6 +1,6 @@
 <?php
 /**
- * User repository
+ * User repository.
  */
 
 namespace App\Repository;
@@ -23,6 +23,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UserRepository extends ServiceEntityRepository
 {
     /**
+     * User Constructor
+     *
      * @param ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)
@@ -31,6 +33,8 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
+     * Add User
+     *
      * @param User $entity
      * @param bool $flush
      *
@@ -46,6 +50,8 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
+     * Remove User
+     *
      * @param User $entity
      * @param bool $flush
      *

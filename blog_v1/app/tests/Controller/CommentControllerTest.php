@@ -57,7 +57,7 @@ class CommentControllerTest extends BaseTest
 
 
         $this->client->submitForm('Save', [
-            'comment[comment_text]' => 'Testing',
+            'comment[commentText]' => 'Testing',
             'comment[autor]' => $userEmail,
             'comment[post]' => $post->getId(),
         ]);
@@ -73,7 +73,7 @@ class CommentControllerTest extends BaseTest
     {
         $expectedStatusCode = 200;
         $userEmail = 'comment_show_user@example.com';
-        $adminUser= $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'comment_show_user@example.com');
+        $adminUser = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'comment_show_user@example.com');
         $this->client->loginUser($adminUser);
         $category = $this->createCategory();
         $post = $this->createPost($adminUser, $category);
@@ -109,15 +109,15 @@ class CommentControllerTest extends BaseTest
         $result = $this->client->getResponse();
 
         $this->client->submitForm('Update', [
-            'comment[comment_text]' => 'Something New',
-            'comment[autor]' => 'New Author',
+            'comment[commentText]' => 'Something New',
+            'comment[autor]' => 'author@example.com',
             'comment[post]' => $post->getId(),
         ]);
 
         $fixture = $this->repository->findAll();
 
         $this->assertEquals('Something New', $fixture[0]->getCommentText());
-        $this->assertEquals('New Author', $fixture[0]->getAutor());
+        $this->assertEquals('author@example.com', $fixture[0]->getAutor());
         $this->assertEquals($expectedStatusCode, $result->getStatusCode());
         $this->assertResponseRedirects('/comment/');
     }

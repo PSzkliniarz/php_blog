@@ -40,6 +40,7 @@ class PostServiceTest extends BaseTest
 
     /**
      * @return void
+     *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
@@ -48,7 +49,7 @@ class PostServiceTest extends BaseTest
         $postRepository =
             static::getContainer()->get(PostRepository::class);
 
-        $user= $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'post_ser_delete_admin@example.com');
+        $user = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'post_ser_delete_admin@example.com');
         $category = $this->createCategory();
         $postToDelete = $this->createPost($user, $category);
 
