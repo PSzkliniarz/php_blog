@@ -38,6 +38,7 @@ class Comment
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 255)]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Email]
     private ?string $autor;
 
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')] #[ORM\JoinColumn(nullable: false)]

@@ -110,14 +110,14 @@ class CommentControllerTest extends BaseTest
 
         $this->client->submitForm('Update', [
             'comment[commentText]' => 'Something New',
-            'comment[autor]' => 'New Author',
+            'comment[autor]' => 'author@example.com',
             'comment[post]' => $post->getId(),
         ]);
 
         $fixture = $this->repository->findAll();
 
         $this->assertEquals('Something New', $fixture[0]->getCommentText());
-        $this->assertEquals('New Author', $fixture[0]->getAutor());
+        $this->assertEquals('author@example.com', $fixture[0]->getAutor());
         $this->assertEquals($expectedStatusCode, $result->getStatusCode());
         $this->assertResponseRedirects('/comment/');
     }
