@@ -36,9 +36,7 @@ class Comment
     private ?string $commentText;
 
     /**
-     * Comment Author
-     *
-     * @var string|null
+     * Comment Author.
      */
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 255)]
@@ -47,17 +45,13 @@ class Comment
     private ?string $autor;
 
     /**
-     * Comment Post
-     *
-     * @var Post
+     * Comment Post.
      */
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')] #[ORM\JoinColumn(nullable: false)]
     private Post $post;
 
     /**
-     * Get id
-     *
-     * @return int|null
+     * @return int|null return
      */
     public function getId(): ?int
     {
@@ -65,9 +59,7 @@ class Comment
     }
 
     /**
-     * Get Comment text
-     *
-     * @return string|null
+     * @return string|null return
      */
     public function getCommentText(): ?string
     {
@@ -75,11 +67,9 @@ class Comment
     }
 
     /**
-     * Set Comment Text
+     * @param string $commentText param
      *
-     * @param string $commentText
-     *
-     * @return $this
+     * @return $this return
      */
     public function setCommentText(string $commentText): self
     {
@@ -89,9 +79,7 @@ class Comment
     }
 
     /**
-     * Get Author
-     *
-     * @return string|null
+     * @return string|null return
      */
     public function getAutor(): ?string
     {
@@ -99,11 +87,9 @@ class Comment
     }
 
     /**
-     * Set Author
+     * @param string $autor param
      *
-     * @param string $autor
-     *
-     * @return $this
+     * @return $this return
      */
     public function setAutor(string $autor): self
     {
@@ -113,9 +99,7 @@ class Comment
     }
 
     /**
-     * Get Post
-     *
-     * @return Post|null
+     * @return Post|null return
      */
     public function getPost(): ?Post
     {
@@ -123,11 +107,9 @@ class Comment
     }
 
     /**
-     * Set Post
+     * @param Post|null $post param
      *
-     * @param Post|null $post
-     *
-     * @return $this
+     * @return $this return
      */
     public function setPost(?Post $post): self
     {

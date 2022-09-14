@@ -46,11 +46,9 @@ class CommentController extends AbstractController
     }
 
     /**
-     * List of comments
+     * @param CommentRepository $commentRepository param
      *
-     * @param CommentRepository $commentRepository
-     *
-     * @return Response
+     * @return Response return
      */
     #[Route('/', name: 'comment_index', methods: ['GET'])]
     public function index(CommentRepository $commentRepository): Response
@@ -61,12 +59,10 @@ class CommentController extends AbstractController
     }
 
     /**
-     * Create Comment
+     * @param Request           $request           param
+     * @param CommentRepository $commentRepository param
      *
-     * @param Request           $request
-     * @param CommentRepository $commentRepository
-     *
-     * @return Response
+     * @return Response return
      */
     #[Route('/new', name: 'comment_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CommentRepository $commentRepository): Response
@@ -109,13 +105,11 @@ class CommentController extends AbstractController
     }
 
     /**
-     * Edit Comment
+     * @param Request           $request           param
+     * @param Comment           $comment           param
+     * @param CommentRepository $commentRepository param
      *
-     * @param Request           $request
-     * @param Comment           $comment
-     * @param CommentRepository $commentRepository
-     *
-     * @return Response
+     * @return Response return
      */
     #[IsGranted('EDIT', subject: 'comment')]
     #[Route('/{id}/edit', name: 'comment_edit', methods: ['GET', 'POST'])]
@@ -142,12 +136,10 @@ class CommentController extends AbstractController
     }
 
     /**
-     * Delete comment
+     * @param Request $request param
+     * @param Comment $comment param
      *
-     * @param Request $request
-     * @param Comment $comment
-     *
-     * @return Response
+     * @return Response return
      */
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/delete', name: 'comment_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]

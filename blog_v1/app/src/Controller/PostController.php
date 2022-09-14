@@ -42,11 +42,9 @@ class PostController extends AbstractController
     private CommentService $commentService;
 
     /**
-     * Post Constructor
-     *
-     * @param PostServiceInterface $postService
-     * @param TranslatorInterface  $translator
-     * @param CommentService       $commentService
+     * @param PostServiceInterface $postService    param
+     * @param TranslatorInterface  $translator     param
+     * @param CommentService       $commentService param
      */
     public function __construct(PostServiceInterface $postService, TranslatorInterface $translator, CommentService $commentService)
     {
@@ -98,12 +96,10 @@ class PostController extends AbstractController
     }
 
     /**
-     * Create Post Action
+     * @param Request        $request        param
+     * @param PostRepository $postRepository param
      *
-     * @param Request        $request
-     * @param PostRepository $postRepository
-     *
-     * @return Response
+     * @return Response return
      */
     #[Route('/new', name: 'post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PostRepository $postRepository): Response
@@ -132,14 +128,12 @@ class PostController extends AbstractController
     }
 
     /**
-     * Show Post Action
+     * @param Request                $request           param
+     * @param Post                   $post              param
+     * @param CommentRepository      $commentRepository param
+     * @param EntityManagerInterface $em                param
      *
-     * @param Request                $request
-     * @param Post                   $post
-     * @param CommentRepository      $commentRepository
-     * @param EntityManagerInterface $em
-     *
-     * @return Response
+     * @return Response return
      */
     #[Route('/{id}', name: 'post_show', methods: ['GET'])]
     public function show(Request $request, Post $post, CommentRepository $commentRepository, EntityManagerInterface $em): Response
@@ -165,15 +159,13 @@ class PostController extends AbstractController
     }
 
     /**
-     * Edit Post Action
+     * @param $id             post
+     * @param Request                $request        param
+     * @param PostRepository         $postRepository param
+     * @param EntityManagerInterface $em             param
+     * @param Post                   $post           param
      *
-     * @param $id
-     * @param Request                $request
-     * @param PostRepository         $postRepository
-     * @param EntityManagerInterface $em
-     * @param Post                   $post
-     *
-     * @return Response
+     * @return Response return
      */
     #[Route('/{id}/edit', name: 'post_edit', methods: ['GET', 'POST'])]
     #[IsGranted('EDIT', subject: 'post')]

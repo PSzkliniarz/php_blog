@@ -28,9 +28,7 @@ class Category
     private $name;
 
     /**
-     * Get Id
-     *
-     * @return int|null
+     * @return int|null return
      */
     public function getId(): ?int
     {
@@ -38,9 +36,7 @@ class Category
     }
 
     /**
-     * Get Name
-     *
-     * @return string|null
+     * @return string|null return
      */
     public function getName(): ?string
     {
@@ -48,11 +44,9 @@ class Category
     }
 
     /**
-     * Set Name
+     * @param string $name param
      *
-     * @param string $name
-     *
-     * @return $this
+     * @return $this return
      */
     public function setName(string $name): self
     {
