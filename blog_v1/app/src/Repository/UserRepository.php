@@ -23,9 +23,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UserRepository extends ServiceEntityRepository
 {
     /**
-     * User Constructor
-     *
-     * @param ManagerRegistry $registry
+     * @param ManagerRegistry $registry param
      */
     public function __construct(ManagerRegistry $registry)
     {
@@ -33,12 +31,10 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Add User
+     * @param User $entity param
+     * @param bool $flush  param
      *
-     * @param User $entity
-     * @param bool $flush
-     *
-     * @return void
+     * @return void return
      */
     public function add(User $entity, bool $flush = false): void
     {
@@ -50,12 +46,10 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Remove User
+     * @param User $entity param
+     * @param bool $flush  param
      *
-     * @param User $entity
-     * @param bool $flush
-     *
-     * @return void
+     * @return void return
      */
     public function remove(User $entity, bool $flush = false): void
     {

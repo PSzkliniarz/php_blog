@@ -40,12 +40,10 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Add Category
+     * @param Category $entity param
+     * @param bool     $flush  param
      *
-     * @param Category $entity
-     * @param bool     $flush
-     *
-     * @return void
+     * @return void return
      */
     public function add(Category $entity, bool $flush = false): void
     {
@@ -57,12 +55,10 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Remove Category
+     * @param Category $entity param
+     * @param bool     $flush  param
      *
-     * @param Category $entity
-     * @param bool     $flush
-     *
-     * @return void
+     * @return void return
      */
     public function remove(Category $entity, bool $flush = false): void
     {

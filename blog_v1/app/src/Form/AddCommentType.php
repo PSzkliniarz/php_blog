@@ -17,12 +17,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 class AddCommentType extends AbstractType
 {
     /**
-     * Build Form
+     * @param FormBuilderInterface $builder param
+     * @param array                $options param
      *
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     *
-     * @return void
+     * @return void return
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

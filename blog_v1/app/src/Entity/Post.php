@@ -65,9 +65,7 @@ class Post
     private $comments;
 
     /**
-     * Get Id
-     *
-     * @return int|null
+     * @return int|null return
      */
     public function getId(): ?int
     {
@@ -75,9 +73,7 @@ class Post
     }
 
     /**
-     * Get Title
-     *
-     * @return string|null
+     * @return string|null return
      */
     public function getTitle(): ?string
     {
@@ -85,11 +81,9 @@ class Post
     }
 
     /**
-     * Set Title
+     * @param string $title param
      *
-     * @param string $title
-     *
-     * @return $this
+     * @return $this return
      */
     public function setTitle(string $title): self
     {
@@ -99,9 +93,7 @@ class Post
     }
 
     /**
-     * Get Content
-     *
-     * @return string|null
+     * @return string|null return
      */
     public function getContent(): ?string
     {
@@ -109,11 +101,9 @@ class Post
     }
 
     /**
-     * Set Content
+     * @param string $content param
      *
-     * @param string $content
-     *
-     * @return $this
+     * @return $this return
      */
     public function setContent(string $content): self
     {
@@ -131,9 +121,7 @@ class Post
     }
 
     /**
-     * Get Category
-     *
-     * @return Category|null
+     * @return Category|null return
      */
     public function getCategory(): ?Category
     {
@@ -141,11 +129,9 @@ class Post
     }
 
     /**
-     * Set Category
+     * @param Category|null $category param
      *
-     * @param Category|null $category
-     *
-     * @return $this
+     * @return $this return
      */
     public function setCategory(?Category $category): self
     {
@@ -185,11 +171,9 @@ class Post
     }
 
     /**
-     * Set Updated At
+     * @param DateTimeImmutable|null $updatedAt param
      *
-     * @param DateTimeImmutable|null $updatedAt
-     *
-     * @return void
+     * @return void return
      */
     public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
     {
@@ -197,9 +181,7 @@ class Post
     }
 
     /**
-     * Get Author
-     *
-     * @return User|null
+     * @return User|null return
      */
     public function getAuthor(): ?User
     {
@@ -207,11 +189,9 @@ class Post
     }
 
     /**
-     * Set Author
+     * @param User|null $author param
      *
-     * @param User|null $author
-     *
-     * @return $this
+     * @return $this return
      */
     public function setAuthor(?User $author): self
     {

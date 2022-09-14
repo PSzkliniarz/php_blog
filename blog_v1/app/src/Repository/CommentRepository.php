@@ -20,9 +20,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class CommentRepository extends ServiceEntityRepository
 {
     /**
-     * Comment Constructor
-     *
-     * @param ManagerRegistry $registry
+     * @param ManagerRegistry $registry param
      */
     public function __construct(ManagerRegistry $registry)
     {
@@ -30,12 +28,10 @@ class CommentRepository extends ServiceEntityRepository
     }
 
     /**
-     * Add Comment
+     * @param Comment $entity param
+     * @param bool    $flush  param
      *
-     * @param Comment $entity
-     * @param bool    $flush
-     *
-     * @return void
+     * @return void return
      */
     public function add(Comment $entity, bool $flush = false): void
     {
@@ -47,12 +43,10 @@ class CommentRepository extends ServiceEntityRepository
     }
 
     /**
-     * Remove Comment
+     * @param Comment $entity param
+     * @param bool    $flush  param
      *
-     * @param Comment $entity
-     * @param bool    $flush
-     *
-     * @return void
+     * @return void return
      */
     public function remove(Comment $entity, bool $flush = false): void
     {
